@@ -3,7 +3,7 @@ name: sinch-provisioning-api
 description: Provisions and manages channel resources for Conversation API projects, including WhatsApp accounts/senders/templates, RCS senders, KakaoTalk senders/templates, webhooks, and bundles. Use when the user asks to onboard channels, configure provisioning webhooks, manage templates, orchestrate multi-service bundles, or automate channel setup.
 metadata:
   author: Sinch
-  version: 1.0.2
+  version: 1.0.3
   category: Messaging
   tags: provisioning, whatsapp, rcs, kakaotalk, channels, templates, bundles
   uses:
@@ -62,9 +62,26 @@ Use this sequence unless the user requests otherwise.
 
 ## Getting Started
 
+### Agent Credentials handling
+
+Store credentials in environment variables — never hardcode tokens or keys in commands or source code:
+
+```bash
+export SINCH_PROJECT_ID="your-project-id"
+export SINCH_KEY_ID="your-key-id"
+export SINCH_KEY_SECRET="your-key-secret"
+export SINCH_ACCESS_TOKEN="your-oauth-token"
+```
+
 ### Authentication
 
-See [sinch-authentication](../sinch-authentication/SKILL.md) for full auth setup.
+Ensure that authentication headers are properly set when making API calls. The Provisioning API uses Bearer token authentication:
+
+```bash
+-H "Authorization: Bearer $SINCH_ACCESS_TOKEN"
+```
+
+See [sinch-authentication](../sinch-authentication/SKILL.md) for full setup, most importantly how to obtain `{SINCH_ACCESS_TOKEN}` (OAuth2 client-credentials — do not mint your own JWT).
 
 Supported auth methods:
 - OAuth 2.0 bearer token (recommended)

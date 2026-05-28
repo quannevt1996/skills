@@ -3,7 +3,7 @@ name: sinch-conversation-api
 description: "Sends and receives omnichannel messages with Sinch Conversation API. One unified API for SMS, WhatsApp, RCS, MMS, Viber, Messenger, and more. Use when sending texts, WhatsApp messages, rich cards, carousels, templates, batch messages, or building multi-channel messaging."
 metadata:
   author: Sinch
-  version: 1.1.1
+  version: 1.1.2
   category: Messaging
   tags: conversation, messaging, sms, whatsapp, rcs, mms, viber, messenger, instagram, telegram, kakao, line, wechat, webhooks, templates
   uses:
@@ -41,7 +41,7 @@ Store credentials in environment variables — never hardcode tokens or keys in 
 export SINCH_PROJECT_ID="your-project-id"
 export SINCH_KEY_ID="your-key-id"
 export SINCH_KEY_SECRET="your-key-secret"
-export SINCH_APP_ID="your-app-id"
+export SINCH_APP_ID="your-app-id"  # Conversation API App ID — found at https://dashboard.sinch.com/convapi/apps. Not the same as SINCH_PROJECT_ID.
 export SINCH_REGION="us"  # us|eu|br, default: us
 export SINCH_SMS_SENDER_ID="your-sms-sender-id"  # Alphanumeric or phone number, required for SMS channel
 ```
@@ -54,7 +54,7 @@ Ensure that authentication headers are properly set when making API calls. The C
 -H "Authorization: Bearer $SINCH_ACCESS_TOKEN"
 ```
 
-See [sinch-authentication](../sinch-authentication/SKILL.md) for full setup, most importantly how to obtain `{ACCESS_TOKEN}` (OAuth2 client-credentials — do not mint your own JWT).
+See [sinch-authentication](../sinch-authentication/SKILL.md) for full setup, most importantly how to obtain `{SINCH_ACCESS_TOKEN}` (OAuth2 client-credentials — do not mint your own JWT).
 
 ### Base URL
 
@@ -157,6 +157,7 @@ Examples:
 - Rich messages transcoded to text on unsupported channels — test across target channels.
 - Implement idempotent webhook handlers — Sinch retries with exponential backoff.
 - Load credentials from environment variables. Never hardcode.
+- **`SINCH_APP_ID` is not `SINCH_PROJECT_ID`:** `SINCH_APP_ID` is the Conversation API App ID, found at https://dashboard.sinch.com/convapi/apps. `SINCH_PROJECT_ID` is the project/account identifier from the dashboard. Using the project ID where the app ID is required will cause `404` or `400` errors.
 - **Region mismatch causes `404`:** All Conversation API URLs are region-specific (`{region}.conversation.api.sinch.com`). If you get a `404`, verify the app's region in the Sinch dashboard and ensure the base URL or SDK region config matches. See [sinch-sdks](../sinch-sdks/SKILL.md) for SDK-specific region setup.
 - Error codes: `400` malformed or duplicate resource (e.g., webhook with same target already exists), `401` bad credentials, `403` no access/billing limit, `404` not found/region mismatch, `429` rate limit, `500/501/503` retry with backoff.
 - **Messages not delivered:** Verify app region matches base URL region (mismatches cause `404`). Check delivery status via webhook or `GET /messages/{message_id}`. WhatsApp: must be within 24h window or using an approved template. Channel fallback: `SWITCHING_CHANNEL` status means fallback occurred — each attempted channel may incur charges.

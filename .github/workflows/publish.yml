@@ -1,0 +1,28 @@
+name: Publish Skills to Tessl
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Publish to Tessl Workspace
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Publish skills to Tessl
+        uses: tessl-ai/publish-action@v1
+        with:
+          api-key: ${{ secrets.TESSL_API_KEY }}
+          workspace: ${{ secrets.TESSL_WORKSPACE }}
+

@@ -3,7 +3,7 @@ name: sinch-mailgun
 description: Sends, receives, and tracks email via the Mailgun (Sinch) API. Use when the user wants to send email, manage domains, configure webhooks, query email events/logs, manage templates, handle suppressions (bounces, unsubscribes, complaints), set up inbound routes, manage mailing lists, DKIM keys, or IP warmup using Mailgun.
 metadata:
   author: Sinch
-  version: 1.0.2
+  version: 1.0.3
   category: Email
   tags: email, mailgun, smtp, webhooks, templates, domains, suppressions
   uses:
@@ -26,11 +26,24 @@ Mailgun (by Sinch) provides REST API and SMTP relay for transactional and bulk e
 
 ## Getting Started
 
+### Agent Credentials handling
+
+Store credentials in environment variables — never hardcode API keys in commands or source code:
+
+```bash
+export MAILGUN_API_KEY="your-private-api-key"
+export MAILGUN_DOMAIN="your-sending-domain"
+```
+
 ### Authentication
 
-See [sinch-authentication](../sinch-authentication/SKILL.md) for full auth setup.
+Ensure that authentication headers are properly set when making API calls. Mailgun uses HTTP Basic Auth — username `api`, password your Mailgun Private API key:
 
-All requests use HTTP Basic Auth — username: `api`, password: your Mailgun private API key. Find it at Mailgun Dashboard > Account Settings > API Keys.
+```bash
+--user "api:$MAILGUN_API_KEY"
+```
+
+See [sinch-authentication](../sinch-authentication/SKILL.md) for full auth setup. Find your key at Mailgun Dashboard > Account Settings > API Keys.
 
 Two key types:
 - **Primary Account API Key** — full access to all endpoints and domains

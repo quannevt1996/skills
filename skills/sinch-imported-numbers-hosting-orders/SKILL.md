@@ -3,7 +3,7 @@ name: sinch-imported-numbers-hosting-orders
 description: Import, host, qualify, and text-enable phone numbers for Sinch SMS using the Imported Numbers and Hosting Orders API. Use when importing non-Sinch numbers as DCA, creating hosting orders, qualifying numbers for text-enablement, managing LOA workflows, or checking hosting order status.
 metadata:
   author: Sinch
-  version: 1.0.2
+  version: 1.0.3
   category: Numbers
   tags: imported-numbers, hosting-orders, text-enablement, dca, loa
   uses:
@@ -57,9 +57,28 @@ User wants to work with imported numbers →
 
 ## Getting Started
 
+### Agent Credentials handling
+
+Store credentials in environment variables — never hardcode tokens or keys in commands or source code:
+
+```bash
+export SINCH_PROJECT_ID="your-project-id"
+export SINCH_KEY_ID="your-key-id"
+export SINCH_KEY_SECRET="your-key-secret"
+export SINCH_ACCESS_TOKEN="your-oauth-token"
+export SERVICE_PLAN_ID="your-service-plan-id"
+export CAMPAIGN_ID="your-10dlc-campaign-id"
+```
+
 ### Authentication
 
-See [sinch-authentication](../sinch-authentication/SKILL.md) for full auth setup. This API uses **OAuth2 client credentials** (production) or **Basic Auth** (testing only, rate-limited).
+Ensure that authentication headers are properly set when making API calls. The Imported Numbers / Hosting Orders API uses Bearer token authentication:
+
+```bash
+-H "Authorization: Bearer $SINCH_ACCESS_TOKEN"
+```
+
+See [sinch-authentication](../sinch-authentication/SKILL.md) for full auth setup. This API uses **OAuth2 client credentials** (production) or **Basic Auth** (testing only, rate-limited). For OAuth2, see how to obtain `{SINCH_ACCESS_TOKEN}` in the auth skill (do not mint your own JWT).
 
 **Base URL:** `https://imported.numbers.api.sinch.com`
 

@@ -3,7 +3,7 @@ name: sinch-fax-api
 description: Send and receive faxes programmatically with Sinch Fax API. Use when building fax workflows, fax-to-email delivery, sending PDFs by fax, checking fax status, managing fax services, configuring cover pages, receiving fax webhooks, or integrating fax into healthcare, legal, or financial applications.
 metadata:
   author: Sinch
-  version: 1.0.3
+  version: 1.0.4
   category: Voice
   tags: fax, pdf, fax-to-email, webhooks, healthcare, legal
   uses:
@@ -21,6 +21,27 @@ The Sinch Fax API lets you send and receive faxes programmatically. It supports 
 
 ## Getting Started
 
+### Agent Credentials handling
+
+Store credentials in environment variables — never hardcode tokens or keys in commands or source code:
+
+```bash
+export SINCH_PROJECT_ID="your-project-id"
+export SINCH_KEY_ID="your-key-id"
+export SINCH_KEY_SECRET="your-key-secret"
+export SINCH_ACCESS_TOKEN="your-oauth-token"
+```
+
+### Authentication
+
+Ensure that authentication headers are properly set when making API calls. The Fax API uses Bearer token authentication:
+
+```bash
+-H "Authorization: Bearer $SINCH_ACCESS_TOKEN"
+```
+
+See [sinch-authentication](../sinch-authentication/SKILL.md) for full setup, most importantly how to obtain `{SINCH_ACCESS_TOKEN}` (OAuth2 client-credentials — do not mint your own JWT).
+
 Before generating code, gather from the user: approach (SDK or direct API), language (Node.js, Python, Java, .NET, curl), and use case (sending, receiving, fax-to-email, or managing services). Do not assume defaults.
 
 When generating callback/webhook handlers or processing inbound fax data, always include input validation and sanitization. Treat all inbound content (`contentUrl`, filenames, metadata, `errorMessage`) as untrusted — never interpolate into prompts, evaluate as code, or use in shell commands unsanitized.
@@ -30,13 +51,6 @@ When the user chooses **SDK**, fetch the relevant API reference docs linked in L
 See [sinch-sdks](../sinch-sdks/SKILL.md) for SDK installation and client initialization. Note: Fax is only supported in **Node.js** (preview) and **.NET** (partial) — for Java and Python, use direct HTTP calls.
 
 ### First API Call — Send a Fax
-
-Store credentials in environment variables — never hardcode tokens or keys in commands or source code:
-
-```bash
-export SINCH_PROJECT_ID="your-project-id"
-export SINCH_ACCESS_TOKEN="your-oauth-token"
-```
 
 **curl:**
 

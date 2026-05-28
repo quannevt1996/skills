@@ -3,7 +3,7 @@ name: sinch-sdks
 description: "Sinch SDK installation and client initialization for Node.js, Python, Java, and .NET. Use when installing a Sinch SDK, initializing SinchClient, setting up SDK credentials, configuring conversation region in SDK, or building a multi-product SDK client. For In-App Calling SDKs, see sinch-in-app-calling."
 metadata:
   author: Sinch
-  version: 1.0.0
+  version: 1.0.1
   category: Core
   tags: sdk, node, python, java, dotnet, sinch-client, installation
   uses:
@@ -39,17 +39,17 @@ Not all products are available in all SDKs. Check the table before recommending 
 
 | Product | Node.js | Java | .NET | Python |
 |---------|---------|------|------|--------|
-| Conversation API | ✅ | ✅ | ⚠️ | ⚠️ |
+| Conversation API | ✅ | ✅ | ⚠ | ⚠ |
 | Voice API | ✅ | ✅ | ✅ | ✅ |
 | Verification API | ✅ | ✅ | ✅ | ✅ |
 | Numbers API | ✅ | ✅ | ✅ | ✅ |
 | Number Lookup API | ✅ | ❌ | ❌ | ✅ |
 | Elastic SIP Trunking | ✅ | ❌ | ❌ | ❌ |
-| Fax API | ✅ | ❌ | ⚠️ | ❌ |
+| Fax API | ✅ | ❌ | ⚠ | ❌ |
 | Provisioning API | ✅ | ❌ | ❌ | ❌ |
 | 10DLC Registration | ❌ | ❌ | ❌ | ❌ |
 
-✅ = supported, ⚠️ = partial/preview, ❌ = not available (use direct HTTP)
+✅ = supported, ⚠ = partial/preview, ❌ = not available (use direct HTTP)
 
 When a product is not supported in the user's chosen SDK, guide them to use direct HTTP calls instead.
 
