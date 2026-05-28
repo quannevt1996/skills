@@ -1,0 +1,25 @@
+{
+  "workspace": "sinch",
+  "skills": [
+    "skills/sinch-authentication",
+    "skills/sinch-sdks",
+    "skills/sinch-conversation-api",
+    "skills/sinch-provisioning-api",
+    "skills/sinch-voice-api",
+    "skills/sinch-in-app-calling",
+    "skills/sinch-elastic-sip-trunking",
+    "skills/sinch-mailgun",
+    "skills/sinch-mailgun-inspect",
+    "skills/sinch-mailgun-optimize",
+    "skills/sinch-mailgun-validate",
+    "skills/sinch-numbers-api",
+    "skills/sinch-number-order-api",
+    "skills/sinch-imported-numbers-hosting-orders",
+    "skills/sinch-10dlc",
+    "skills/sinch-porting-api",
+    "skills/sinch-verification-api",
+    "skills/sinch-number-lookup-api",
+    "skills/sinch-fax-api"
+  ]
+}
+

@@ -3,7 +3,7 @@ name: sinch-mailgun-optimize
 description: Monitors email deliverability via Mailgun Optimize (InboxReady) API. Use when the user wants to test inbox placement with seed lists, monitor IP or domain blocklists, track spam traps, check email health scores, review DMARC reports, or pull Google Postmaster or Microsoft SNDS data. Also use when emails are going to spam, sender reputation is dropping, inbox rate is declining, a domain needs warmup monitoring, an IP needs blocklist removal, or the user wants to set up email deliverability monitoring.
 metadata:
   author: Sinch
-  version: 1.0.2
+  version: 1.0.3
   category: Email
   tags: email, mailgun, deliverability, inbox-placement, blocklist, dmarc, spam-traps
   uses:
@@ -27,11 +27,23 @@ Mailgun Optimize (by Sinch), formerly InboxReady, is a deliverability suite: inb
 
 ## Getting Started
 
+### Agent Credentials handling
+
+Store credentials in environment variables — never hardcode API keys in commands or source code:
+
+```bash
+export MAILGUN_API_KEY="your-private-api-key"
+```
+
 ### Authentication
 
-See [sinch-authentication](../sinch-authentication/SKILL.md) for full auth setup.
+Ensure that authentication headers are properly set when making API calls. Mailgun Optimize uses HTTP Basic Auth — username `api`, password your Mailgun Private API key:
 
-All requests use HTTP Basic Auth — username: `api`, password: your Mailgun private API key.
+```bash
+--user "api:$MAILGUN_API_KEY"
+```
+
+See [sinch-authentication](../sinch-authentication/SKILL.md) for full auth setup.
 
 ### Base URLs
 

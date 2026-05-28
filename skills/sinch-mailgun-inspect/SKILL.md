@@ -3,7 +3,7 @@ name: sinch-mailgun-inspect
 description: Checks email quality before sending via Mailgun Inspect API. Use when previewing emails across clients, checking accessibility (WCAG), validating links, validating images, or analyzing email HTML/CSS compatibility.
 metadata:
   author: Sinch
-  version: 1.0.3
+  version: 1.0.4
   category: Email
   tags: email, mailgun, inspect, accessibility, links, images, previews, qa
   uses:
@@ -37,12 +37,23 @@ For full endpoint tables and request schemas, see [references/api-endpoints.md](
 
 ## Getting Started
 
+### Agent Credentials handling
+
+Store credentials in environment variables — never hardcode API keys in commands or source code. In scripts and CI, inject the key via `MAILGUN_API_KEY` (or your platform’s secret mechanism), not literals in the job definition. Do not paste live keys into shell commands that may be logged, shared, or committed.
+
+```bash
+export MAILGUN_API_KEY="your-private-api-key"
+```
+
 ### Authentication
 
-See the [sinch-authentication](../sinch-authentication/SKILL.md) skill. HTTP Basic Auth -- username `api`, password = Mailgun Private API key.
+Ensure that authentication headers are properly set when making API calls. Mailgun Inspect uses HTTP Basic Auth — username `api`, password your Mailgun Private API key:
 
-- Prefer loading the private API key from the environment or a secret store. Do not paste live keys into shell commands that may be logged, shared, or committed.
-- In scripts and CI, inject the key via `MAILGUN_API_KEY` (or your platform’s secret mechanism), not literals in the job definition.
+```bash
+--user "api:$MAILGUN_API_KEY"
+```
+
+See the [sinch-authentication](../sinch-authentication/SKILL.md) skill for full auth setup.
 
 ### Base URLs
 
@@ -58,9 +69,6 @@ Create responses may return `"status": "Processing"` or `"Completed"` depending 
 ### Canonical Example: Accessibility Test
 
 ```bash
-# Private API key must be in the environment (never commit real values; see sinch-authentication)
-export MAILGUN_API_KEY="{MAILGUN_API_KEY}"
-
 # 1. Create test (returns 201 + test ID)
 curl -X POST \
   "https://api.mailgun.net/v1/inspect/accessibility" \

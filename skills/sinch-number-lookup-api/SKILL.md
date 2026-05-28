@@ -3,7 +3,7 @@ name: sinch-number-lookup-api
 description: Looks up phone number details via Sinch Number Lookup API. Use when checking carrier, line type, porting status, SIM swap, VoIP detection, or reassigned number detection (RND) for fraud prevention or routing decisions.
 metadata:
   author: Sinch
-  version: 1.0.4
+  version: 1.0.5
   category: Numbers
   tags: number-lookup, carrier, line-type, sim-swap, voip-detection, fraud-prevention
   uses:
@@ -25,22 +25,32 @@ When the user chooses **SDK**, refer to [sinch-sdks](../sinch-sdks/SKILL.md) for
 
 ## Getting Started
 
+### Agent Credentials handling
+
+Store credentials in environment variables — never hardcode tokens or keys in commands or source code:
+
+```bash
+export SINCH_PROJECT_ID="your-project-id"
+export SINCH_KEY_ID="your-key-id"
+export SINCH_KEY_SECRET="your-key-secret"
+export SINCH_ACCESS_TOKEN="your-oauth-token"
+```
+
 ### Authentication
 
-See [sinch-authentication](../sinch-authentication/SKILL.md) for full setup.
+Ensure that authentication headers are properly set when making API calls. The Number Lookup API uses Bearer token authentication:
+
+```bash
+-H "Authorization: Bearer $SINCH_ACCESS_TOKEN"
+```
+
+See [sinch-authentication](../sinch-authentication/SKILL.md) for full setup, most importantly how to obtain `{SINCH_ACCESS_TOKEN}` (OAuth2 client-credentials — do not mint your own JWT).
 
 ### Base URL
 
 `https://lookup.api.sinch.com`
 
 **Endpoint:** `POST /v2/projects/{PROJECT_ID}/lookups`
-
-Store credentials in environment variables — never hardcode tokens or keys in commands or source code:
-
-```bash
-export SINCH_PROJECT_ID="your-project-id"
-export SINCH_ACCESS_TOKEN="your-oauth-token"
-```
 
 ### First API Call
 

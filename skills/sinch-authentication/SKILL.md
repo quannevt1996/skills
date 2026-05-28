@@ -3,7 +3,7 @@ name: sinch-authentication
 description: Configures Sinch API credentials and authentication. Use when setting up OAuth2, Basic auth, application signing, or API keys for any Sinch product including Conversation API, Voice, Verification, Numbers, Fax, and Mailgun. Also use when troubleshooting 401 Unauthorized, 403 Forbidden, invalid signature, or credential errors against any Sinch API. For SDKs usage, see sinch-sdks.
 metadata:
   author: Sinch
-  version: 1.1.1
+  version: 1.1.2
   category: Core
   tags: authentication, oauth2, basic-auth, api-keys, credentials
 ---
@@ -82,7 +82,7 @@ curl -X GET \
   -H "Authorization: Bearer $SINCH_ACCESS_TOKEN"
 ```
 
-The token endpoint `https://auth.sinch.com/oauth2/token` works for **all** project-scoped APIs, including regional ones like Conversation and Template Management. Regional aliases (`us.auth.sinch.com`, `eu.auth.sinch.com`) also exist but are not required — the global URL issues tokens valid for any region.
+The token endpoint `https://auth.sinch.com/oauth2/token` works for **all** project-scoped APIs, including regional ones like Conversation and Template Management.
 
 **Basic auth (quick testing only)** — Supported but **not recommended for production** (heavily rate-limited). Pass Key ID as username and Key Secret as password:
 
@@ -125,7 +125,6 @@ For SDK installation and client initialization, see the [sinch-sdks](../sinch-sd
 ## Gotchas
 
 - OAuth2 tokens expire in 3600s. SDKs auto-refresh; for curl, re-request before expiry.
-- **Regional API URLs matter for Conversation/Template APIs**: The API base URL must match the region where the app was created (e.g., `us.conversation.api.sinch.com`, `eu.conversation.api.sinch.com`). The OAuth token endpoint, however, is always `https://auth.sinch.com/oauth2/token`.
 - **Voice/Verification use application credentials**, not project Access Keys. These are entirely separate credential sets from different dashboard pages.
 - Key Secrets are shown only once. If lost, create a new Access Key.
 - **Never hardcode credentials** — Always load Key IDs, Key Secrets, and API keys from environment variables or a secret manager. Do not embed credentials in source code, shell history, or agent instructions.

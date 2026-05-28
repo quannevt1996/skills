@@ -3,7 +3,7 @@ name: sinch-10dlc
 description: Registers US 10DLC brands and campaigns with Sinch for A2P SMS messaging. Use when the user needs to register a brand, create a 10DLC campaign, check registration status, troubleshoot a 10DLC rejection, fix an EIN mismatch, upgrade from simplified to full registration, or qualify a campaign for US SMS sending on 10-digit long codes. Do NOT use for non-US messaging or toll-free/short code registration.
 metadata:
   author: Sinch
-  version: 1.1.2
+  version: 1.1.3
   category: Numbers
   tags: 10dlc, sms, a2p, brand-registration, campaign-registration, us-messaging, brand, campaign, tcr, registration, a2p-sms
   uses:
@@ -30,7 +30,26 @@ This API is REST-only — there is no SDK wrapper. Use curl, `fetch`, `axios`, `
 
 ## Getting Started
 
-**Auth:** See [sinch-authentication](../sinch-authentication/SKILL.md) for setup.
+### Agent Credentials handling
+
+Store credentials in environment variables — never hardcode tokens or keys in commands or source code:
+
+```bash
+export SINCH_PROJECT_ID="your-project-id"
+export SINCH_KEY_ID="your-key-id"
+export SINCH_KEY_SECRET="your-key-secret"
+export SINCH_ACCESS_TOKEN="your-oauth-token"
+```
+
+### Authentication
+
+Ensure that authentication headers are properly set when making API calls. The 10DLC API uses Bearer token authentication:
+
+```bash
+-H "Authorization: Bearer $SINCH_ACCESS_TOKEN"
+```
+
+See [sinch-authentication](../sinch-authentication/SKILL.md) for full setup, most importantly how to obtain `{SINCH_ACCESS_TOKEN}` (OAuth2 client-credentials — do not mint your own JWT).
 
 ### Base URL
 
@@ -39,13 +58,6 @@ https://us10dlc.numbers.api.sinch.com
 ```
 
 US-only — there are no regional variants for 10DLC.
-
-Store credentials in environment variables — never hardcode tokens or keys in commands or source code:
-
-```bash
-export SINCH_PROJECT_ID="your-project-id"
-export SINCH_ACCESS_TOKEN="your-oauth-token"
-```
 
 ### First API Call
 

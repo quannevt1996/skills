@@ -26,7 +26,7 @@ MMS (Multimedia Messaging Service) extends SMS with support for images, video, a
 | Audio      | MP3, WAV, AMR       | Limited carrier support             |
 | vCard      | VCF                 | Contact cards                       |
 | Text       | Plain text          | Included as message body            |
-| PDF        | PDF                 | Included as URL                     |
+| PDF        | PDF                 | Included as PDF file                |
 
 All media files must serve a valid `Content-Type` header. `application/octet-stream` may be rejected.
 
@@ -38,10 +38,9 @@ Keep media **under 1 MB** for reliable delivery.
 |-------------|-------------|----------------------------------|
 | Long code   | ~1 MB       | Varies by carrier                |
 | Toll-free   | ~1 MB       | Varies by carrier                |
-| Short code  | Varies      | Transcoding not supported        |
-| 10DLC       | Varies      | Transcoding not supported        |
+| Short code  | Varies      |         |
+| 10DLC       | Varies      |         |
 
-The API accepts up to 100 MB, but carriers impose lower limits. Base64 encoding adds ~37% size overhead.
 
 ## MMS Channel Properties
 

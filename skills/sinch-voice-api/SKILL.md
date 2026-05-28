@@ -3,7 +3,7 @@ name: sinch-voice-api
 description: Build voice apps with Sinch Voice REST API. Use for phone calls, text-to-speech (TTS), IVR menus, DTMF input, conference calling, call recording, call forwarding, answering machine detection (AMD), SIP routing, WebSocket audio streaming, and SVAML call control.
 metadata:
   author: Sinch
-  version: 1.1.2
+  version: 1.1.3
   category: Voice
   tags: voice, calls, tts, ivr, dtmf, conference, recording, svaml, sip, amd, webrtc
   uses:
@@ -35,9 +35,24 @@ When generating direct API calls, use the [Voice API Reference (Markdown)](https
 
 ## Getting Started
 
+### Agent Credentials handling
+
+Store credentials in environment variables — never hardcode application keys or secrets in commands or source code:
+
+```bash
+export SINCH_APPLICATION_KEY="your-application-key"
+export SINCH_APPLICATION_SECRET="your-application-secret"
+```
+
 ### Authentication
 
-See the [sinch-authentication](../sinch-authentication/SKILL.md) skill. The Voice API uses **Application Key + Application Secret** (not project-level OAuth2).
+Ensure that authentication headers are properly set when making API calls. The Voice API uses **Application Key + Application Secret** (not project-level OAuth2):
+
+```bash
+-u "$SINCH_APPLICATION_KEY:$SINCH_APPLICATION_SECRET"
+```
+
+See the [sinch-authentication](../sinch-authentication/SKILL.md) skill for full setup.
 
 - **Basic Auth**: `Authorization: Basic base64(APPLICATION_KEY:APPLICATION_SECRET)`
 - **Signed Requests** (production): HMAC-SHA256 signing. See [Authentication Guide](https://developers.sinch.com/docs/voice/api-reference/authentication.md).
@@ -64,7 +79,7 @@ See [sinch-sdks](../sinch-sdks/SKILL.md) for installation and client initializat
 ```bash
 curl -X POST \
   "https://calling.api.sinch.com/calling/v1/callouts" \
-  -u "{APPLICATION_KEY}:{APPLICATION_SECRET}" \
+  -u "$SINCH_APPLICATION_KEY:$SINCH_APPLICATION_SECRET" \
   -H "Content-Type: application/json" \
   -d '{
     "method": "ttsCallout",

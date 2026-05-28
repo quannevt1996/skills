@@ -55,14 +55,14 @@ Fired when a call reaches the Sinch platform. **Requires SVAML response.**
 ```json
 {
   "event": "ice",
-  "callId": "4398599d1ba84ef3bde0a82dfb61abed",
-  "callResourceUrl": "https://calling-euc1.api.sinch.com/calling/v1/calls/id/4398599d1ba84ef3bde0a82dfb61abed",
+  "callId": "aaa11111222233334444555566667777",
+  "callResourceUrl": "https://calling-euc1.api.sinch.com/calling/v1/calls/id/aaa11111222233334444555566667777",
   "timestamp": "2024-01-15T10:30:00Z",
   "version": 1,
   "custom": "",
-  "applicationKey": "94983f76-1161-6655-9515-4785c7b67dd8",
-  "cli": "+14045001000",
-  "to": { "type": "number", "endpoint": "+14045005000" },
+  "applicationKey": "00000000-0000-0000-0000-000000000000",
+  "cli": "+15551000001",
+  "to": { "type": "number", "endpoint": "+15551000002" },
   "domain": "pstn",
   "originationType": "pstn",
   "userRate": { "currencyId": "USD", "amount": 0.0 }
@@ -78,8 +78,8 @@ Fired when a call reaches the Sinch platform. **Requires SVAML response.**
   ],
   "action": {
     "name": "connectPstn",
-    "number": "+14045009000",
-    "cli": "+14045001000"
+    "number": "+15551000003",
+    "cli": "+15551000001"
   }
 }
 ```
@@ -101,12 +101,12 @@ Fired when the callee answers. **Requires SVAML response.** Not sent for in-app 
 ```json
 {
   "event": "ace",
-  "callId": "4398599d1ba84ef3bde0a82dfb61abed",
-  "callResourceUrl": "https://calling-euc1.api.sinch.com/calling/v1/calls/id/4398599d1ba84ef3bde0a82dfb61abed",
+  "callId": "aaa11111222233334444555566667777",
+  "callResourceUrl": "https://calling-euc1.api.sinch.com/calling/v1/calls/id/aaa11111222233334444555566667777",
   "timestamp": "2024-01-15T10:30:05Z",
   "version": 1,
   "custom": "",
-  "applicationKey": "94983f76-1161-6655-9515-4785c7b67dd8"
+  "applicationKey": "00000000-0000-0000-0000-000000000000"
 }
 ```
 
@@ -183,11 +183,11 @@ Fired when the call ends. **Fire-and-forget — no SVAML response.** Return `200
 ```json
 {
   "event": "dice",
-  "callId": "4398599d1ba84ef3bde0a82dfb61abed",
+  "callId": "aaa11111222233334444555566667777",
   "timestamp": "2024-01-15T10:35:00Z",
   "version": 1,
   "custom": "",
-  "applicationKey": "94983f76-1161-6655-9515-4785c7b67dd8",
+  "applicationKey": "00000000-0000-0000-0000-000000000000",
   "reason": "CALLEEHANGUP",
   "result": "ANSWERED",
   "duration": 295,
@@ -222,10 +222,10 @@ Fired when a `runMenu` action collects input. **Requires SVAML response.**
 ```json
 {
   "event": "pie",
-  "callId": "4398599d1ba84ef3bde0a82dfb61abed",
+  "callId": "aaa11111222233334444555566667777",
   "timestamp": "2024-01-15T10:30:10Z",
   "version": 1,
-  "applicationKey": "94983f76-1161-6655-9515-4785c7b67dd8",
+  "applicationKey": "00000000-0000-0000-0000-000000000000",
   "menuResult": {
     "menuId": "main",
     "type": "return",
@@ -244,8 +244,8 @@ Fired when a `runMenu` action collects input. **Requires SVAML response.**
   ],
   "action": {
     "name": "connectPstn",
-    "number": "+14045009000",
-    "cli": "+14045001000"
+    "number": "+15551000003",
+    "cli": "+15551000001"
   }
 }
 ```
@@ -269,11 +269,11 @@ Fired for notifications (e.g., recording finished, AMD result for async mode). *
 ```json
 {
   "event": "notify",
-  "callId": "4398599d1ba84ef3bde0a82dfb61abed",
+  "callId": "aaa11111222233334444555566667777",
   "version": 1,
-  "applicationKey": "94983f76-1161-6655-9515-4785c7b67dd8",
+  "applicationKey": "00000000-0000-0000-0000-000000000000",
   "type": "recording_finished",
-  "destination": "https://storage.example.com/recordings/4398599d.wav"
+  "destination": "https://storage.example.com/recordings/aaa11111.wav"
 }
 ```
 

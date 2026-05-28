@@ -3,7 +3,7 @@ name: sinch-porting-api
 description: "Port phone numbers from other carriers into Sinch with the Porting API. Automates port-in order creation, portability checks, order tracking, on-demand activation, and webhook notifications. Use when porting numbers, checking portability, creating port-in orders, tracking port status, activating ported numbers, uploading LOA documents, or configuring porting defaults."
 metadata:
   author: Sinch
-  version: 1.0.2
+  version: 1.0.3
   category: Numbers
   tags: porting, port-in, number-transfer, carrier, portability, loa, foc, activation
   uses:
@@ -28,22 +28,32 @@ Note: The `@sinch/sdk-core` Node.js SDK does not currently have dedicated portin
 
 ## Getting Started
 
+### Agent Credentials handling
+
+Store credentials in environment variables — never hardcode tokens, PINs, or keys in commands or source code:
+
+```bash
+export SINCH_PROJECT_ID="your-project-id"
+export SINCH_KEY_ID="your-key-id"
+export SINCH_KEY_SECRET="your-key-secret"
+export SINCH_ACCESS_TOKEN="your-oauth-token"
+```
+
 ### Authentication
 
-See [sinch-authentication](../sinch-authentication/SKILL.md) for full setup.
+Ensure that authentication headers are properly set when making API calls. The Porting API uses Bearer token authentication:
+
+```bash
+-H "Authorization: Bearer $SINCH_ACCESS_TOKEN"
+```
+
+See [sinch-authentication](../sinch-authentication/SKILL.md) for full setup, most importantly how to obtain `{SINCH_ACCESS_TOKEN}` (OAuth2 client-credentials — do not mint your own JWT).
 
 ### Base URL
 
 | Environment | URL |
 |-------------|-----|
 | Production  | `https://porting.api.sinch.com/v1/projects/{PROJECT_ID}` |
-
-Store credentials in environment variables — never hardcode tokens, PINs, or keys in commands or source code:
-
-```bash
-export SINCH_PROJECT_ID="your-project-id"
-export SINCH_ACCESS_TOKEN="your-oauth-token"
-```
 
 ### First API Call — Check Portability
 

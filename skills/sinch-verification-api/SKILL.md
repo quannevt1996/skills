@@ -3,7 +3,7 @@ name: sinch-verification-api
 description: Verify phone numbers via SMS, Flashcall, Phone Call, Data (seamless carrier-level), or WhatsApp with Sinch Verification API. Use when implementing user phone verification, OTP, two-factor authentication, or number ownership confirmation flows.
 metadata:
   author: Sinch
-  version: 1.0.2
+  version: 1.0.3
   category: Verification
   tags: verification, otp, sms, flashcall, 2fa, phone-verification, whatsapp
   uses:
@@ -33,11 +33,26 @@ For SDK syntax and setup, see [sinch-sdks](../sinch-sdks/SKILL.md). For direct H
 
 ## Getting Started
 
+### Agent Credentials handling
+
+Store credentials in environment variables — never hardcode application keys or secrets in commands or source code:
+
+```bash
+export SINCH_APPLICATION_KEY="your-application-key"
+export SINCH_APPLICATION_SECRET="your-application-secret"
+```
+
 ### Authentication
+
+Ensure that authentication headers are properly set when making API calls. The Verification API uses **Application Key + Application Secret** (from your Sinch dashboard app), not project-level OAuth2:
+
+```bash
+-u "$SINCH_APPLICATION_KEY:$SINCH_APPLICATION_SECRET"
+```
 
 See [sinch-authentication](../sinch-authentication/SKILL.md) skill for dashboard setup.
 
-The Verification API uses **Application Key + Application Secret** (from your Sinch dashboard app), not project-level OAuth2. Three auth methods are supported:
+Three auth methods are supported:
 
 | Method | Use for |
 |--------|---------|
@@ -57,7 +72,7 @@ See [sinch-sdks](../sinch-sdks/SKILL.md) for installation and client initializat
 # Uses Basic Auth (-u) for simplicity. Use Application Signed Requests in production.
 curl -X POST \
   "https://verification.api.sinch.com/verification/v1/verifications" \
-  -u {APPLICATION_KEY}:{APPLICATION_SECRET} \
+  -u "$SINCH_APPLICATION_KEY:$SINCH_APPLICATION_SECRET" \
   -H 'Content-Type: application/json' \
   -d '{
     "identity": { "type": "number", "endpoint": "+12025550134" },

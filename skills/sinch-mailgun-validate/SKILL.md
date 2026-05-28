@@ -3,7 +3,7 @@ name: sinch-mailgun-validate
 description: Build with Mailgun Validate API for email verification and list hygiene. Use when validating email addresses, checking email deliverability, running bulk validation jobs, previewing list health, or cleaning an email list.
 metadata:
   author: Sinch
-  version: 1.0.3
+  version: 1.0.4
   category: Email
   tags: email, mailgun, validation, verification, list-hygiene, bulk-validation
   uses:
@@ -18,7 +18,23 @@ Mailgun Validate verifies email addresses in real time (single) and in batch (bu
 
 ## Getting Started
 
-See [sinch-authentication](../sinch-authentication/SKILL.md) for full auth setup. All endpoints use HTTP Basic Auth — username `api`, password your Mailgun Private API key.
+### Agent Credentials handling
+
+Store credentials in environment variables — never hardcode API keys in commands or source code:
+
+```bash
+export MAILGUN_API_KEY="your-private-api-key"
+```
+
+### Authentication
+
+Ensure that authentication headers are properly set when making API calls. Mailgun Validate uses HTTP Basic Auth — username `api`, password your Mailgun Private API key:
+
+```bash
+--user "api:$MAILGUN_API_KEY"
+```
+
+See [sinch-authentication](../sinch-authentication/SKILL.md) for full auth setup.
 
 Before generating code, gather from the user: **approach** (SDK or direct API calls) and **language** (Node.js, Python, Java, PHP, Ruby, Go, curl). Do not assume defaults.
 
@@ -46,12 +62,6 @@ Before generating the Maven dependency, look up the latest release version of `c
 ```
 
 **Base URLs:** `api.mailgun.net` (US) · `api.eu.mailgun.net` (EU). Always match the region of your Mailgun account.
-
-Store credentials in environment variables — never hardcode API keys in commands or source code:
-
-```bash
-export MAILGUN_API_KEY="your-private-api-key"
-```
 
 **Canonical example — validate one address:**
 
