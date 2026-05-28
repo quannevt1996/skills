@@ -1,25 +1,26 @@
 {
-  "workspace": "sinch",
-  "skills": [
-    "skills/sinch-authentication",
-    "skills/sinch-sdks",
-    "skills/sinch-conversation-api",
-    "skills/sinch-provisioning-api",
-    "skills/sinch-voice-api",
-    "skills/sinch-in-app-calling",
-    "skills/sinch-elastic-sip-trunking",
-    "skills/sinch-mailgun",
-    "skills/sinch-mailgun-inspect",
-    "skills/sinch-mailgun-optimize",
-    "skills/sinch-mailgun-validate",
-    "skills/sinch-numbers-api",
-    "skills/sinch-number-order-api",
-    "skills/sinch-imported-numbers-hosting-orders",
-    "skills/sinch-10dlc",
-    "skills/sinch-porting-api",
-    "skills/sinch-verification-api",
-    "skills/sinch-number-lookup-api",
-    "skills/sinch-fax-api"
-  ]
+  "name": "sinch-partnerships-ecosystems/sinch-skills",
+  "version": "0.1.0",
+  "summary": "Official Sinch API skills for AI coding agents — SMS, Voice, Verification, Numbers, Mailgun email, and more.",
+  "skills": {
+    "sinch-authentication": { "path": "skills/sinch-authentication/SKILL.md" },
+    "sinch-sdks": { "path": "skills/sinch-sdks/SKILL.md" },
+    "sinch-conversation-api": { "path": "skills/sinch-conversation-api/SKILL.md" },
+    "sinch-provisioning-api": { "path": "skills/sinch-provisioning-api/SKILL.md" },
+    "sinch-voice-api": { "path": "skills/sinch-voice-api/SKILL.md" },
+    "sinch-in-app-calling": { "path": "skills/sinch-in-app-calling/SKILL.md" },
+    "sinch-elastic-sip-trunking": { "path": "skills/sinch-elastic-sip-trunking/SKILL.md" },
+    "sinch-mailgun": { "path": "skills/sinch-mailgun/SKILL.md" },
+    "sinch-mailgun-inspect": { "path": "skills/sinch-mailgun-inspect/SKILL.md" },
+    "sinch-mailgun-optimize": { "path": "skills/sinch-mailgun-optimize/SKILL.md" },
+    "sinch-mailgun-validate": { "path": "skills/sinch-mailgun-validate/SKILL.md" },
+    "sinch-numbers-api": { "path": "skills/sinch-numbers-api/SKILL.md" },
+    "sinch-number-order-api": { "path": "skills/sinch-number-order-api/SKILL.md" },
+    "sinch-imported-numbers-hosting-orders": { "path": "skills/sinch-imported-numbers-hosting-orders/SKILL.md" },
+    "sinch-10dlc": { "path": "skills/sinch-10dlc/SKILL.md" },
+    "sinch-porting-api": { "path": "skills/sinch-porting-api/SKILL.md" },
+    "sinch-verification-api": { "path": "skills/sinch-verification-api/SKILL.md" },
+    "sinch-number-lookup-api": { "path": "skills/sinch-number-lookup-api/SKILL.md" },
+    "sinch-fax-api": { "path": "skills/sinch-fax-api/SKILL.md" }
+  }
 }
-

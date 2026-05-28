@@ -10,19 +10,15 @@ jobs:
   publish:
     name: Publish to Tessl Workspace
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: tesslio/setup-tessl@v2
         with:
-          node-version: '20'
+          token: ${{ secrets.TESSL_API_KEY }}
 
-      - name: Publish skills to Tessl
-        uses: tessl-ai/publish-action@v1
-        with:
-          api-key: ${{ secrets.TESSL_API_KEY }}
-          workspace: ${{ secrets.TESSL_WORKSPACE }}
-
+      - run: tessl tile publish
