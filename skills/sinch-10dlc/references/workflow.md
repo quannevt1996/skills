@@ -149,4 +149,4 @@ Campaign status flow: `SINCH_REVIEW` → `SINCH_APPROVED` → `SUBMITTED` → `A
 - Stop automated polling after **14 days** and advise the user to contact Sinch support.
 - On API errors, apply exponential backoff as described in Step 2.
 
-**Once approved**, you can send A2P SMS on US 10-digit long codes through Sinch. To send messages, see the [sinch-conversation-api](../sinch-conversation-api/SKILL.md) skill.
+**Once approved**, you can send A2P SMS on US 10-digit long codes through Sinch. To send messages, see the [sinch-conversation-api](../../sinch-conversation-api/SKILL.md) skill.
