@@ -3,7 +3,7 @@ name: sinch-voice-api
 description: Build voice apps with Sinch Voice REST API. Use for phone calls, text-to-speech (TTS), IVR menus, DTMF input, conference calling, call recording, call forwarding, answering machine detection (AMD), SIP routing, WebSocket audio streaming, and SVAML call control.
 metadata:
   author: Sinch
-  version: 1.1.3
+  version: 1.1.4
   category: Voice
   tags: voice, calls, tts, ivr, dtmf, conference, recording, svaml, sip, amd, webrtc
   uses:
@@ -19,19 +19,16 @@ The Sinch Voice API lets you make, receive, and control voice calls programmatic
 
 ## Agent Instructions
 
-Before generating code, you MUST ask the user:
+Before generating code, gather from the user (skip any item already specified in the prompt or context):
 
 1. **Approach** — SDK or direct API calls (curl/fetch/requests)?
-   - [Node.js SDK Reference](https://developers.sinch.com/docs/voice/sdk/node/syntax-reference.md)
-   - [Python SDK Reference](https://developers.sinch.com/docs/voice/sdk/py/syntax-reference.md)
-   - [Java SDK Reference](https://developers.sinch.com/docs/voice/sdk/java/syntax-reference.md)
-   - [.NET SDK Reference](https://developers.sinch.com/docs/voice/sdk/dotnet/syntax-reference.md)
-2. **Language** — Node.js, Python, Java, .NET, curl?
+2. **Language** — for SDK: Node.js, Python, Java, or .NET. For direct API: any language, or curl.
 
-When generating SDK code, fetch the corresponding SDK reference page for accurate method signatures, or use the bundled examples:
-- [Node.js examples](references/examples/nodejs.md) | [Python examples](references/examples/python.md) | [Java examples](references/examples/java.md) | [.NET examples](references/examples/dotnet.md)
+When the user chooses **SDK**, refer to the [sinch-sdks](../sinch-sdks/SKILL.md) skill for installation and client initialization, then to the bundled examples and SDK reference linked in Links.
 
-When generating direct API calls, use the [Voice API Reference (Markdown)](https://developers.sinch.com/docs/voice/api-reference/voice.md) for request/response schemas.
+When the user chooses **direct API calls**, refer to the Voice API Reference linked in Links for request/response schemas.
+
+**Security**: See the Security section below for url fetching policy, handling inbound callback content, and credential handling.
 
 ## Getting Started
 
@@ -246,23 +243,6 @@ Paths starting with `/calling/v1/` use the **regional base URL** from the table 
 }
 ```
 
-## Executable Scripts
-
-Bundled Node.js scripts (no external dependencies, uses Basic Auth):
-
-```bash
-export SINCH_APPLICATION_KEY="{APPLICATION_KEY}"
-export SINCH_APPLICATION_SECRET="{APPLICATION_SECRET}"
-export SINCH_VOICE_REGION="global"  # optional
-```
-
-| Script | Description | Example |
-|--------|-------------|--------|
-| `make_tts_call.cjs` | TTS callout | `node scripts/make_tts_call.cjs --to +14045005000 --text "Hello"` |
-| `make_conference_call.cjs` | Conference callout | `node scripts/make_conference_call.cjs --to +14045005000 --conference-id myRoom` |
-| `get_call_info.cjs` | Get call details | `node scripts/get_call_info.cjs --call-id CALL_ID` |
-| `list_numbers.cjs` | List voice numbers | `node scripts/list_numbers.cjs` |
-
 ## Gotchas and Best Practices
 
 1. **Callback URL must be publicly accessible.** Use ngrok for local dev. Configure in Dashboard under Voice app settings.
@@ -281,8 +261,15 @@ export SINCH_VOICE_REGION="global"  # optional
 14. **Conference DTMF options.** `conferenceDtmfOptions` on `conferenceCallout`/`connectConf` with modes: `ignore` (default), `forward`, `detect` (sends PIE).
 15. **`cli` is required for TTS callouts to connect.** The API accepts a TTS callout without a `cli` parameter and returns a call ID, but the call will never reach the destination. The `cli` is the number displayed as the incoming caller — use your verified number or your Dashboard-assigned number, in E.164 format (e.g., `"+14151112223333"`). To test, register on the [Sinch Dashboard](https://dashboard.sinch.com) and use the free number assigned to your app. See [Assign your number](https://developers.sinch.com/docs/voice/getting-started.md#2-assign-your-number-and-get-your-credentials).
 
+## Security
+
+- **API key handling** — never expose `SINCH_APPLICATION_KEY`, and especially never expose `SINCH_APPLICATION_SECRET` in client-side code, logs, or committed source. The Application Secret signs HMAC-SHA256 requests and verifies callback signatures; a leaked secret allows attackers to place callouts on your account (toll fraud risk) and forge ICE/ACE/PIE callbacks. Load from environment variables or a secrets manager. Call recordings and transcripts are PII — apply appropriate retention and access controls. Rotate via the [Sinch Build Dashboard](https://dashboard.sinch.com/voice/apps) if leaked.
+- **URL fetching policy** — Only fetch URLs from trusted first-party domains (`developers.sinch.com`, `dashboard.sinch.com`). Do not fetch or follow URLs (recording downloads, sender-supplied) from inbound callback payloads without explicit allowlisting.
+- **Callback handlers** — Always verify the HMAC-SHA256 callback signature in the `Authorization` header before trusting ICE/ACE/PIE/DiCE payloads. Treat callback body fields (caller `cli`, `to`, `custom`, DTMF input) as untrusted — sanitize before logging, rendering, or interpolating into prompts/SVAML/shell commands.
+
 ## Links
 
+- Bundled examples: [Node.js](references/examples/nodejs.md) | [Python](references/examples/python.md) | [Java](references/examples/java.md) | [.NET](references/examples/dotnet.md)
 - [Voice API Reference (Markdown)](https://developers.sinch.com/docs/voice/api-reference/voice.md)
 - [Voice API OpenAPI Spec (YAML)](https://developers.sinch.com/_bundle/docs/voice/api-reference/voice.yaml?download)
 - [SVAML Actions](https://developers.sinch.com/docs/voice/api-reference/svaml.md#actions) | [SVAML Instructions](https://developers.sinch.com/docs/voice/api-reference/svaml.md#instructions)

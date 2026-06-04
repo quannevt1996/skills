@@ -11,8 +11,10 @@ Host the library with your site and include it:
 <script src="sinch.min.js"></script>
 ```
 
-### Load from Sinch CDN 
+### Load from Sinch CDN
+`cdn.sinch.com` is the trusted first-party Sinch CDN. For production, pin to a specific SDK version rather than `latest` so updates are explicit and auditable.
 ```html
+<!-- Trusted first-party CDN: cdn.sinch.com is owned by Sinch. Prefer a pinned version in production. -->
 <script src="https://cdn.sinch.com/latest/sinch-rtc-min.js"></script>
 ```
 

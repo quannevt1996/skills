@@ -16,23 +16,23 @@ These skills can also be installed via the [Sinch Plugins](https://github.com/si
 |-------|---------|----------|-------------|
 | `sinch-authentication` | 1.1.2 | Core | Sinch API auth setup (OAuth2, API keys, dashboard links) |
 | `sinch-sdks` | 1.0.1 | Core | SDK installation and client initialization (Node.js, Python, Java, .NET) |
-| `sinch-conversation-api` | 1.1.2 | Messaging | Omnichannel messaging — SMS, WhatsApp, RCS, MMS, Viber, and more. Includes channel guides, templates, batch sending, and webhooks |
-| `sinch-provisioning-api` | 1.0.3 | Messaging | Provision WhatsApp senders, RCS agents, templates, and webhooks |
-| `sinch-voice-api` | 1.1.3 | Voice | Make, receive, and control voice calls (SVAML, IVR, TTS, conferencing) |
+| `sinch-conversation-api` | 1.1.3 | Messaging | Omnichannel messaging — SMS, WhatsApp, RCS, MMS, Viber, and more. Includes channel guides, templates, batch sending, and webhooks |
+| `sinch-provisioning-api` | 1.0.4 | Messaging | Provision WhatsApp senders, RCS agents, templates, and webhooks |
+| `sinch-voice-api` | 1.1.4 | Voice | Make, receive, and control voice calls (SVAML, IVR, TTS, conferencing) |
 | `sinch-in-app-calling` | 1.0.2 | Voice & Video | In-app voice and video SDK |
-| `sinch-elastic-sip-trunking` | 1.0.3 | Voice | SIP trunk and number management |
-| `sinch-mailgun` | 1.0.3 | Email | Mailgun Email API — sending, receiving, tracking |
-| `sinch-mailgun-inspect` | 1.0.4 | Email | Email preview and rendering |
-| `sinch-mailgun-optimize` | 1.0.3 | Email | Email deliverability optimization |
-| `sinch-mailgun-validate` | 1.0.4 | Email | Email address verification |
-| `sinch-numbers-api` | 1.1.2 | Numbers | Search, rent, manage, and release phone numbers |
-| `sinch-number-order-api` | 1.0.3 | Numbers | Multi-step number ordering with KYC compliance |
-| `sinch-imported-numbers-hosting-orders` | 1.0.3 | Numbers | Import, host, and text-enable non-Sinch phone numbers |
-| `sinch-10dlc` | 1.1.3 | Numbers | US 10DLC brand and campaign registration |
-| `sinch-porting-api` | 1.0.3 | Numbers | Port phone numbers from other carriers into Sinch |
-| `sinch-verification-api` | 1.0.3 | Verification | Phone number verification (SMS, Voice, Flashcall, WhatsApp) |
-| `sinch-number-lookup-api` | 1.0.5 | Numbers | Phone number lookup and validation |
-| `sinch-fax-api` | 1.0.4 | Voice | Send and receive faxes |
+| `sinch-elastic-sip-trunking` | 1.0.4 | Voice | SIP trunk and number management |
+| `sinch-mailgun` | 1.0.4 | Email | Mailgun Email API — sending, receiving, tracking |
+| `sinch-mailgun-inspect` | 1.0.5 | Email | Email preview and rendering |
+| `sinch-mailgun-optimize` | 1.0.4 | Email | Email deliverability optimization |
+| `sinch-mailgun-validate` | 1.0.5 | Email | Email address verification |
+| `sinch-numbers-api` | 1.1.3 | Numbers | Search, rent, manage, and release phone numbers |
+| `sinch-number-order-api` | 1.0.4 | Numbers | Multi-step number ordering with KYC compliance |
+| `sinch-imported-numbers-hosting-orders` | 1.0.4 | Numbers | Import, host, and text-enable non-Sinch phone numbers |
+| `sinch-10dlc` | 1.1.4 | Numbers | US 10DLC brand and campaign registration |
+| `sinch-porting-api` | 1.0.4 | Numbers | Port phone numbers from other carriers into Sinch |
+| `sinch-verification-api` | 1.0.4 | Verification | Phone number verification (SMS, Voice, Flashcall, WhatsApp) |
+| `sinch-number-lookup-api` | 1.0.6 | Numbers | Phone number lookup and validation |
+| `sinch-fax-api` | 1.0.5 | Voice | Send and receive faxes |
 
 ## Skill Structure
 
