@@ -1,4 +1,11 @@
 #!/usr/bin/env node
+/*
+ * EXECUTION TOOL — not a schema reference.
+ * Run this to PERFORM a task (e.g. create a webhook, send a test message) when you do not
+ * need to write application code. Do NOT copy its payload literals or logic into a new
+ * codebase as if they were the API spec — load the authoritative developers.sinch.com doc
+ * instead. See "Source of Truth" in this skill's SKILL.md.
+ */
 /**
  * Send an RCS carousel message via Sinch Conversation API.
  *
@@ -16,7 +23,7 @@
  *   SINCH_REGION       - API region: us, eu, or br (default: us)
  */
 
-var client = require("../common/sinch_client.cjs");
+var client = require("./common/sinch_client.cjs");
 
 function parseArgs(argv) {
   var args = { fallbackSms: false };
@@ -59,8 +66,8 @@ function parseArgs(argv) {
     );
     process.exit(1);
   }
-  if (args.cards.length < 2 || args.cards.length > 10) {
-    console.error("Error: carousel must have 2-10 cards");
+  if (args.cards.length < 1 || args.cards.length > 10) {
+    console.error("Error: carousel must have 1-10 cards");
     process.exit(1);
   }
   return args;

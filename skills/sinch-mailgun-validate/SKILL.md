@@ -3,7 +3,7 @@ name: sinch-mailgun-validate
 description: Build with Mailgun Validate API for email verification and list hygiene. Use when validating email addresses, checking email deliverability, running bulk validation jobs, previewing list health, or cleaning an email list.
 metadata:
   author: Sinch
-  version: 1.0.5
+  version: 1.1.0
   category: Email
   tags: email, mailgun, validation, verification, list-hygiene, bulk-validation
   uses:
@@ -29,6 +29,26 @@ When the user chooses **direct API calls**, refer to the API reference linked in
 
 **Security**: See the Security section below for url fetching policy, handling inbound bulk results, and credential handling.
 
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `documentation.mailgun.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `documentation.mailgun.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **This SKILL.md's own tables, field lists, and snippets (SUMMARIES — not authoritative).**
+   They orient you and point at the right canonical doc; they may lag, omit fields, or
+   simplify nesting. Use them to decide what to build and which doc to open. Do NOT
+   transcribe a field name, nesting, encoding, or enum from this file into shipped code
+   without confirming it in the tier-1 doc. If a detail appears only in a summary, treat
+   it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
+
 ## Getting Started
 
 ### Agent Credentials handling
@@ -46,6 +66,8 @@ Ensure that authentication headers are properly set when making API calls. Mailg
 ```bash
 --user "api:$MAILGUN_API_KEY"
 ```
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [API Overview / Auth](https://documentation.mailgun.com/docs/validate/api-overview.md) doc before implementing.)*
 
 See [sinch-authentication](../sinch-authentication/SKILL.md) for full auth setup.
 
@@ -110,6 +132,8 @@ Key response fields to branch on:
 - **`did_you_mean`**: typo suggestion (surface to users at signup)
 - **`engagement`**: object with `engaged` (bool), `engagement` (string — behavior type), `is_bot` (bool)
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Single Validation docs](https://documentation.mailgun.com/docs/validate/single-valid-ir.md) doc before implementing.)*
+
 Rate limited — back off and retry on 429.
 
 ### List Health Preview
@@ -121,7 +145,7 @@ Free, non-destructive sample assessment. Returns deliverability/risk ratios as p
 - `PUT /v4/address/validate/preview/{list_id}` — promote to full bulk validation
 - `DELETE /v4/address/validate/preview/{list_id}` — delete a preview
 - `GET /v4/address/validate/preview` — list all preview jobs
-- Status values: `preview_processing` → `preview_complete`
+- Status values: `preview_processing` → `preview_complete` *(Summary only — confirm exact names/encoding/enums against the authoritative [List Health Preview](https://documentation.mailgun.com/docs/validate/bulk_valid_preview.md) doc before implementing.)*
 - Max 10 parallel preview jobs
 - Response is wrapped in a `"preview"` key; `created_at` is a unix timestamp
 
@@ -135,7 +159,7 @@ Full validation of an uploaded CSV/gzip file (max 25 MB).
 - `GET /v4/address/validate/bulk/{list_id}` — check status / download
 - `DELETE /v4/address/validate/bulk/{list_id}` — cancel or delete
 - `GET /v4/address/validate/bulk` — list all jobs (accepts `limit`, default 500; returns `paging` links)
-- Lifecycle: `created` → `processing` → `completed` → `uploading` → `uploaded` (or `failed`)
+- Lifecycle: `created` → `processing` → `completed` → `uploading` → `uploaded` (or `failed`) *(Summary only — confirm exact names/encoding/enums against the authoritative [Bulk Validation](https://documentation.mailgun.com/docs/validate/bulk-valid-ir.md) doc before implementing.)*
 - Results available when status is `uploaded` via `download_url.csv` / `download_url.json`
 - Max 5 parallel bulk jobs
 - `created_at` is an RFC 2822 date string (e.g., `"Tue, 26 Feb 2019 21:30:03 GMT"`)
@@ -152,7 +176,7 @@ Full reference: [Bulk Validation](https://documentation.mailgun.com/docs/validat
 
 ### Bulk validation checklist
 
-- [ ] CSV has header row with `email` or `email_address` column
+- [ ] CSV has header row with `email` or `email_address` column *(Summary only — confirm exact names/encoding/enums against the authoritative [Bulk Validation](https://documentation.mailgun.com/docs/validate/bulk-valid-ir.md) doc before implementing.)*
 - [ ] File is UTF-8 or ASCII, under 25 MB, no `@` in list name
 - [ ] Fewer than 5 bulk jobs already running
 - [ ] POST to create job → poll GET until status is `uploaded` → download results
@@ -165,7 +189,7 @@ Full reference: [Bulk Validation](https://documentation.mailgun.com/docs/validat
 - `catch_all` means the domain accepts everything — treat as medium risk
 - Role addresses (`info@`, `support@`) are fine for transactional email but risky for marketing
 
-Engagement data (contract customers get `High Engager`, `Engager`, `Bot`, `Complainer`, `Disengaged`, `No data`; self-service get boolean `engaging`/`is_bot`): [Engagement docs](https://documentation.mailgun.com/docs/validate/validate_engagement.md)
+Engagement data (contract customers get `High Engager`, `Engager`, `Bot`, `Complainer`, `Disengaged`, `No data`; self-service get boolean `engaging`/`is_bot`): [Engagement docs](https://documentation.mailgun.com/docs/validate/validate_engagement.md) *(Summary only — confirm exact names/encoding/enums against the authoritative [Engagement docs](https://documentation.mailgun.com/docs/validate/validate_engagement.md) doc before implementing.)*
 
 ## Gotchas
 

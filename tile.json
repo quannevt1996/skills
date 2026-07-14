@@ -8,6 +8,10 @@
     "sinch-conversation-api": {
       "path": "skills/sinch-conversation-api/SKILL.md"
     },
+    "sinch-sms": { "path": "skills/sinch-sms/SKILL.md" },
+    "sinch-mms": { "path": "skills/sinch-mms/SKILL.md" },
+    "sinch-rcs": { "path": "skills/sinch-rcs/SKILL.md" },
+    "sinch-whatsapp": { "path": "skills/sinch-whatsapp/SKILL.md" },
     "sinch-provisioning-api": {
       "path": "skills/sinch-provisioning-api/SKILL.md"
     },

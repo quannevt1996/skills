@@ -3,7 +3,7 @@ name: sinch-number-lookup-api
 description: Looks up phone number details via Sinch Number Lookup API. Use when checking carrier, line type, porting status, SIM swap, VoIP detection, or reassigned number detection (RND) for fraud prevention or routing decisions.
 metadata:
   author: Sinch
-  version: 1.0.6
+  version: 1.1.0
   category: Numbers
   tags: number-lookup, carrier, line-type, sim-swap, voip-detection, fraud-prevention
   uses:
@@ -29,6 +29,26 @@ When the user chooses **SDK**, refer to the [sinch-sdks](../sinch-sdks/SKILL.md)
 When the user chooses **direct API calls**, refer to the API Reference linked in Links for request/response schemas.
 
 **Security**: See the Security section below for url fetching policy and credential handling.
+
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `developers.sinch.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `developers.sinch.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **This SKILL.md's own tables, field lists, and snippets (SUMMARIES — not authoritative).**
+   They orient you and point at the right canonical doc; they may lag, omit fields, or
+   simplify nesting. Use them to decide what to build and which doc to open. Do NOT
+   transcribe a field name, nesting, encoding, or enum from this file into shipped code
+   without confirming it in the tier-1 doc. If a detail appears only in a summary, treat
+   it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
 
 ## Getting Started
 
@@ -83,6 +103,8 @@ For SDK setup (Node.js, Python, Java, .NET), see the [Getting Started Guide](htt
 | `features` | string[] | No | `LineType` (default), `SimSwap`, `VoIPDetection` (alpha), `RND` (alpha) |
 | `rndFeatureOptions.contactDate` | string | If `RND` requested | `YYYY-MM-DD` format |
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [v2 Endpoint Details](https://developers.sinch.com/docs/number-lookup-api-v2/api-reference/number-lookup-v2/numberlookupv2.md) doc before implementing.)*
+
 **Critical:** If `features` is omitted, only `LineType` is returned. You must explicitly request `SimSwap`, `VoIPDetection`, or `RND`.
 
 ## Response
@@ -103,6 +125,8 @@ Flat object (not an array). Each feature populates its own sub-object; unrequest
 | `portingDate` | string | ISO 8601 datetime |
 | `error` | object\|null | Per-feature error (`status`, `title`, `detail`, `type`) |
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [v2 Endpoint Details](https://developers.sinch.com/docs/number-lookup-api-v2/api-reference/number-lookup-v2/numberlookupv2.md) doc before implementing.)*
+
 **`simSwap` object:**
 
 | Field | Type | Values |
@@ -111,12 +135,16 @@ Flat object (not an array). Each feature populates its own sub-object; unrequest
 | `swapPeriod` | string enum | `Undefined`, `SP4H`, `SP12H`, `SP24H`, `SP48H`, `SP5D`, `SP7D`, `SP14D`, `SP30D`, `SPMAX` |
 | `error` | object\|null | Per-feature error |
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [v2 Endpoint Details](https://developers.sinch.com/docs/number-lookup-api-v2/api-reference/number-lookup-v2/numberlookupv2.md) doc before implementing.)*
+
 **`voIPDetection` object (alpha):**
 
 | Field | Type | Values |
 |---|---|---|
 | `probability` | string enum | `Unknown`, `Low`, `Likely`, `High` -- **not numeric** |
 | `error` | object\|null | Per-feature error |
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [v2 Endpoint Details](https://developers.sinch.com/docs/number-lookup-api-v2/api-reference/number-lookup-v2/numberlookupv2.md) doc before implementing.)*
 
 **`rnd` object (alpha):**
 

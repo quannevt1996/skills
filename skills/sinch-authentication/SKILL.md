@@ -3,7 +3,7 @@ name: sinch-authentication
 description: Configures Sinch API credentials and authentication. Use when setting up OAuth2, Basic auth, application signing, or API keys for any Sinch product including Conversation API, Voice, Verification, Numbers, Fax, and Mailgun. Also use when troubleshooting 401 Unauthorized, 403 Forbidden, invalid signature, or credential errors against any Sinch API. For SDKs usage, see sinch-sdks.
 metadata:
   author: Sinch
-  version: 1.1.2
+  version: 1.2.0
   category: Core
   tags: authentication, oauth2, basic-auth, api-keys, credentials
 ---
@@ -15,6 +15,26 @@ Cross-cutting skill that covers credential setup and authentication for all Sinc
 ## Agent Instructions
 
 If the user hasn't specified which Sinch product they're integrating, ask first — the auth model depends on the product. Use the decision table in Step 1 to route to the correct credentials.
+
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `developers.sinch.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `developers.sinch.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **This SKILL.md's own tables, field lists, and snippets (SUMMARIES — not authoritative).**
+   They orient you and point at the right canonical doc; they may lag, omit fields, or
+   simplify nesting. Use them to decide what to build and which doc to open. Do NOT
+   transcribe a field name, nesting, encoding, or enum from this file into shipped code
+   without confirming it in the tier-1 doc. If a detail appears only in a summary, treat
+   it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
 
 ## Step 1: Identify the Auth Model
 
@@ -65,6 +85,8 @@ curl -X POST \
   -u "$SINCH_KEY_ID:$SINCH_KEY_SECRET"
   -d grant_type=client_credentials \
 ```
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Sinch Docs](https://developers.sinch.com/llms.txt) doc before implementing.)*
 
 The response JSON contains an `access_token` field — this is the JWT to use as the bearer token:
 

@@ -3,7 +3,7 @@ name: sinch-fax-api
 description: Send and receive faxes programmatically with Sinch Fax API. Use when building fax workflows, fax-to-email delivery, sending PDFs by fax, checking fax status, managing fax services, configuring cover pages, receiving fax webhooks, or integrating fax into healthcare, legal, or financial applications.
 metadata:
   author: Sinch
-  version: 1.0.5
+  version: 1.1.0
   category: Voice
   tags: fax, pdf, fax-to-email, webhooks, healthcare, legal
   uses:
@@ -30,6 +30,26 @@ When the user chooses **SDK**, refer to the [sinch-sdks](../sinch-sdks/SKILL.md)
 When the user chooses **direct API calls**, refer to the Fax API Reference linked in Links for request/response schemas.
 
 **Security**: See the Security section below for url fetching policy, handling inbound webhook content, and credential handling.
+
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `developers.sinch.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `developers.sinch.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **This SKILL.md's own tables, field lists, and snippets (SUMMARIES — not authoritative).**
+   They orient you and point at the right canonical doc; they may lag, omit fields, or
+   simplify nesting. Use them to decide what to build and which doc to open. Do NOT
+   transcribe a field name, nesting, encoding, or enum from this file into shipped code
+   without confirming it in the tier-1 doc. If a detail appears only in a summary, treat
+   it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
 
 ## Getting Started
 
@@ -79,9 +99,9 @@ curl -X POST \
 - **Fax Services** — Logical containers for fax configuration. Associate numbers, set defaults, and manage routing.
 - **Fax Numbers** — Phone numbers provisioned for fax. Must be configured in your Sinch dashboard.
 - **Faxes** — Individual fax transmissions (inbound or outbound). Each has a unique ID, status, and metadata.
-- **Fax statuses** — `QUEUED` → `IN_PROGRESS` → `COMPLETED` or `FAILURE`. Error details in `errorType` and `errorMessage` fields.
+- **Fax statuses** — `QUEUED` → `IN_PROGRESS` → `COMPLETED` or `FAILURE`. Error details in `errorType` and `errorMessage` fields. *(Summary only — confirm exact names/encoding/enums against the authoritative [Faxes Endpoint Reference](https://developers.sinch.com/docs/fax/api-reference/fax/faxes.md) doc before implementing.)*
 - **Supported formats** — PDF (most reliable), DOC, DOCX, TIF/TIFF, JPG, PNG, TXT, HTML.
-- **Webhooks/Callbacks** — HTTP POST notifications for fax events. Default content type is `multipart/form-data` (fax content as attachment). Set `callbackUrlContentType: "application/json"` for JSON callbacks.
+- **Webhooks/Callbacks** — HTTP POST notifications for fax events. Default content type is `multipart/form-data` (fax content as attachment). Set `callbackUrlContentType: "application/json"` for JSON callbacks. *(Summary only — confirm exact names/encoding/enums against the authoritative [Fax API Reference](https://developers.sinch.com/docs/fax/api-reference/fax.md) doc before implementing.)*
 - **Cover Pages** — Customizable cover pages per service. Attach via `coverPageId` and `coverPageData` on send.
 - **Fax-to-Email** — Incoming faxes auto-forwarded to email addresses.
 - **Retries** — Auto-retry on failure. Default set per fax service; maximum: 5.
@@ -89,7 +109,7 @@ curl -X POST \
 
 ## Common Patterns
 
-Three ways to deliver content: `contentUrl` for URLs (recommended — supports basic auth), `multipart/form-data` for local files, or `contentBase64` for in-memory bytes. `contentUrl` can be a single URL or an array of URLs to compose multi-document faxes.
+Three ways to deliver content: `contentUrl` for URLs (recommended — supports basic auth), `multipart/form-data` for local files, or `contentBase64` for in-memory bytes. `contentUrl` can be a single URL or an array of URLs to compose multi-document faxes. *(Summary only — confirm exact names/encoding/enums against the authoritative [Send a Fax endpoint](https://developers.sinch.com/docs/fax/api-reference/fax/faxes.md) doc before implementing.)*
 
 For HTTPS URLs, ensure your SSL certificate (including intermediate certs) is valid and up-to-date. You can optionally specify `from` to set the sender number.
 
@@ -110,13 +130,13 @@ For HTTPS URLs, ensure your SSL certificate (including intermediate certs) is va
 - PDF is the safest format for reliable rendering on receiving machines.
 - Fax logs and media are retained for 13 months. Use `DELETE /faxes/{id}/file` to remove earlier, or download and archive if longer retention is needed.
 - International fax success rates vary by country — some have specific dialing prefix requirements.
-- Use `resolution: "SUPERFINE"` (400 dpi) for faxes with small text or detailed images; default `FINE` (200 dpi) works for most cases.
+- Use `resolution: "SUPERFINE"` (400 dpi) for faxes with small text or detailed images; default `FINE` (200 dpi) works for most cases. *(Summary only — confirm exact names/encoding/enums against the authoritative [Faxes Endpoint Reference](https://developers.sinch.com/docs/fax/api-reference/fax/faxes.md) doc before implementing.)*
 
 ## Troubleshooting
 
 ### Fax not delivered
 
-1. Check fax status via `GET /faxes/{id}` — look at `status`, `errorType` (`DOCUMENT_CONVERSION_ERROR`, `CALL_ERROR`, `FAX_ERROR`, `FATAL_ERROR`, `GENERAL_ERROR`), and `errorMessage`
+1. Check fax status via `GET /faxes/{id}` — look at `status`, `errorType` (`DOCUMENT_CONVERSION_ERROR`, `CALL_ERROR`, `FAX_ERROR`, `FATAL_ERROR`, `GENERAL_ERROR`), and `errorMessage` *(Summary only — confirm exact names/encoding/enums against the authoritative [Faxes Endpoint Reference](https://developers.sinch.com/docs/fax/api-reference/fax/faxes.md) doc before implementing.)*
 2. If `contentUrl` was used with HTTPS, verify the SSL certificate (including intermediate certs) is valid
 3. Fax delivery depends on the receiving machine answering — retries are automatic (max 5, default set per service)
 

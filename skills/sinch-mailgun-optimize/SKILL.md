@@ -3,7 +3,7 @@ name: sinch-mailgun-optimize
 description: Monitors email deliverability via Mailgun Optimize (InboxReady) API. Use when the user wants to test inbox placement with seed lists, monitor IP or domain blocklists, track spam traps, check email health scores, review DMARC reports, or pull Google Postmaster or Microsoft SNDS data. Also use when emails are going to spam, sender reputation is dropping, inbox rate is declining, a domain needs warmup monitoring, an IP needs blocklist removal, or the user wants to set up email deliverability monitoring.
 metadata:
   author: Sinch
-  version: 1.0.4
+  version: 1.1.0
   category: Email
   tags: email, mailgun, deliverability, inbox-placement, blocklist, dmarc, spam-traps
   uses:
@@ -33,6 +33,26 @@ Refer to the API Reference or OpenAPI Spec linked in Links for request/response 
 
 **Security**: See the Security section below for url fetching policy and credential handling.
 
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `documentation.mailgun.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `documentation.mailgun.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **Bundled `references/*.md` (NAVIGATIONAL SUMMARIES — not authoritative).** They orient
+   you and point at the right canonical doc; they may lag, omit fields, or simplify
+   nesting. Use them to decide what to build and which doc to open. Do NOT transcribe a
+   field name, nesting, encoding, or enum from a reference or from the SKILL.md overview
+   into shipped code without confirming it in the tier-1 doc. If a detail appears only in
+   a summary, treat it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
+
 ## Getting Started
 
 ### Agent Credentials handling
@@ -50,6 +70,8 @@ Ensure that authentication headers are properly set when making API calls. Mailg
 ```bash
 --user "api:$MAILGUN_API_KEY"
 ```
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [API Reference](https://documentation.mailgun.com/docs/inboxready/api-reference/optimize/inboxready.md) doc before implementing.)*
 
 See [sinch-authentication](../sinch-authentication/SKILL.md) for full auth setup.
 

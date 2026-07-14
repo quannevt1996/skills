@@ -3,7 +3,7 @@ name: sinch-10dlc
 description: Registers US 10DLC brands and campaigns with Sinch for A2P SMS messaging. Use when the user needs to register a brand, create a 10DLC campaign, check registration status, troubleshoot a 10DLC rejection, fix an EIN mismatch, upgrade from simplified to full registration, or qualify a campaign for US SMS sending on 10-digit long codes. Do NOT use for non-US messaging or toll-free/short code registration.
 metadata:
   author: Sinch
-  version: 1.1.4
+  version: 1.2.0
   category: Numbers
   tags: 10dlc, sms, a2p, brand-registration, campaign-registration, us-messaging, brand, campaign, tcr, registration, a2p-sms
   uses:
@@ -30,6 +30,26 @@ This skill covers **10DLC only**. The same Registration API also includes TFN (T
 Refer to the API reference linked in Links for request/response schemas.
 
 **Security**: See the Security section below for url fetching policy and credential handling.
+
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `developers.sinch.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `developers.sinch.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **Bundled `references/*.md` (NAVIGATIONAL SUMMARIES — not authoritative).** They orient
+   you and point at the right canonical doc; they may lag, omit fields, or simplify
+   nesting. Use them to decide what to build and which doc to open. Do NOT transcribe a
+   field name, nesting, encoding, or enum from a reference or from the SKILL.md overview
+   into shipped code without confirming it in the tier-1 doc. If a detail appears only in
+   a summary, treat it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
 
 ## Getting Started
 
@@ -103,17 +123,19 @@ curl -X POST \
 }'
 ```
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Brand Registration API](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-brand-registration.md) doc before implementing.)*
+
 ## Key Concepts
 
 - **Brand** — The company sending messages. Must be registered first. ID starts with `B` (e.g., `BESINCH`).
 - **Campaign** — A messaging use case tied to a brand. Defines what, to whom, and why.
 - **TCR** — The Campaign Registry. Sinch submits to TCR on your behalf as your CSP.
-- **Registration type** (`brandRegistrationType`) — `SIMPLIFIED` (basic, lower throughput, $10) or `FULL` (complete vetting, higher throughput, $50). Default is `SIMPLIFIED`. Prefer `FULL` for production.
+- **Registration type** (`brandRegistrationType`) — `SIMPLIFIED` (basic, lower throughput, $10) or `FULL` (complete vetting, higher throughput, $50). Default is `SIMPLIFIED`. Prefer `FULL` for production. *(Summary only — confirm exact names/encoding/enums against the authoritative [Brand Registration API](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-brand-registration.md) doc before implementing.)*
 - **Trust score** — Assigned by TCR after vetting. Higher score = more messages per second. This is a TCR concept; the Sinch API does not return it in the brand response.
 - **Use case** — The campaign's messaging purpose. Use cases are categorized as Standard or Special, with different vetting requirements and fees.
   - Standard Use Cases: 2FA, ACCOUNT_NOTIFICATION, CUSTOMER_CARE, DELIVERY_NOTIFICATION, FRAUD_ALERT, HIGHER_EDUCATION, MARKETING, POLLING_VOTING, PUBLIC_SERVICE_ANNOUNCEMENT, SECURITY_ALERT.
   - Special Use Cases: AGENTS_FRANCHISES, CARRIER_EXEMPT, CHARITY, EMERGENCY, K12_EDUCATION, POLITICAL, PROXY, SOCIAL, SWEEPSTAKE.
-  - Mixed/Low Volume: LOW_VOLUME or MIXED can be used for campaigns that combine multiple standard use cases but have low traffic requirements.
+  - Mixed/Low Volume: LOW_VOLUME or MIXED can be used for campaigns that combine multiple standard use cases but have low traffic requirements. *(Summary only — confirm exact names/encoding/enums against the authoritative [Campaign Registration API](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration.md) doc before implementing.)*
 - **CSP** — Campaign Service Provider. Sinch typically acts as your CSP, managing the registration process. It's also possible for you to register as your own CSP directly with TCR and use Sinch for number provisioning and connectivity, though this is a more advanced setup.
 
 ## Workflow: Complete 10DLC Setup
@@ -130,7 +152,7 @@ Follow these steps in order. Each step depends on the previous one succeeding. F
 - **Look up brand by TCR ID** — See [Get Brand by TCR Brand ID](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-brand-registration/brandregistrationservice_fetchbrandregistrationrequest.md)
 - **Look up campaign by TCR ID** — See [Get Campaign by TCR Campaign ID](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration/campaignregistrationexternalservice_getcampaignbytcrcampaignid.md)
 - **Delete a campaign** — See [Delete Campaign](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration/campaignregistrationexternalservice_deletecampaign.md) (irreversible, status becomes `EXPIRED`). **Note:** the delete path uses singular `campaignRegistration` (not plural) — `DELETE /v1/projects/{projectId}/campaignRegistration/{campaignRegistrationId}`
-- **Resubmit a campaign** — See [Resubmit Campaign](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration/campaignregistrationservice_resubmitcampaignregistration.md). After resubmitting, poll `lastActionStatus`: `RESUBMIT_IN_PROGRESS` → `RESUBMIT_SUCCESSFUL` (get updated MNO metadata) or `RESUBMIT_FAILED` (check campaign feedback for reason)
+- **Resubmit a campaign** — See [Resubmit Campaign](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration/campaignregistrationservice_resubmitcampaignregistration.md). After resubmitting, poll `lastActionStatus`: `RESUBMIT_IN_PROGRESS` → `RESUBMIT_SUCCESSFUL` (get updated MNO metadata) or `RESUBMIT_FAILED` (check campaign feedback for reason) *(Summary only — confirm exact names/encoding/enums against the authoritative [Resubmit Campaign](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration/campaignregistrationservice_resubmitcampaignregistration.md) doc before implementing.)*
 - **Get brand vetting info** — See [Brand Vetting Information](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-brand-registration/brandregistrationservice_getbrandregistrationvettinginfo.md)
 - **Resend 2FA email** — See [Resend 2FA Email](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-brand-registration/brandregistrationservice_resend2faemail.md)
 

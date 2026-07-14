@@ -3,7 +3,7 @@ name: sinch-in-app-calling
 description: Integrate Sinch In-App Voice and Video SDK for real-time calling in Android, iOS, or JavaScript apps. Use when the user mentions In-App Calling, VoIP integration, WebRTC with Sinch, app-to-phone calling, video calling, or building voice/video features in a mobile or web app.
 metadata:
   author: Sinch
-  version: 1.0.2
+  version: 1.1.0
   category: Voice & Video
   tags: in-app-calling, voip, webrtc, voice, video, android, ios, javascript
   uses:
@@ -71,6 +71,28 @@ Receiving inbound PSTN or SIP calls requires:
   }
 }
 ```
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [In-App Calling Overview](https://developers.sinch.com/docs/in-app-calling.md) doc before implementing.)*
+
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `developers.sinch.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `developers.sinch.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **Bundled `references/*.md` (NAVIGATIONAL SUMMARIES — not authoritative).** They orient
+   you and point at the right canonical doc; they may lag, omit fields, or simplify
+   nesting. Use them to decide what to build and which doc to open. Do NOT transcribe a
+   field name, nesting, encoding, or enum from a reference or from the SKILL.md overview
+   into shipped code without confirming it in the tier-1 doc. If a detail appears only in
+   a summary, treat it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
 
 ## Key Concepts
 

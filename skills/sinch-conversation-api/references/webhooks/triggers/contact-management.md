@@ -1,3 +1,8 @@
+> **Summary — not the spec.** This file orients you and links to the authoritative
+> `developers.sinch.com` doc; it may lag, omit fields, or simplify nesting. Do **not**
+> copy field names, nesting, encodings, or enums from here into shipped code without
+> confirming them in the linked doc. See "Source of Truth" in this skill's SKILL.md.
+
 # Contact Management Triggers
 
 ← [Back to Conversation API SKILL.md](../../../SKILL.md)
@@ -15,6 +20,8 @@ The five contact management triggers are:
 - `CONTACT_DELETE` — Contact deleted
 - `CONTACT_MERGE` — Two contacts merged into one
 - `CONTACT_IDENTITIES_DUPLICATION` — Duplicate channel identities detected
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Callbacks & Webhooks](https://developers.sinch.com/docs/conversation/callbacks.md) doc before implementing.)*
 
 ## CONTACT_CREATE
 
@@ -60,6 +67,8 @@ The five contact management triggers are:
 | `contact.external_id`        | Your system's identifier for this contact                      |
 | `contact.metadata`           | Custom JSON metadata                                           |
 | `contact.language`           | Preferred language code                                        |
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Callbacks & Webhooks](https://developers.sinch.com/docs/conversation/callbacks.md) doc before implementing.)*
 
 ### Common Use Cases
 
@@ -110,7 +119,7 @@ The five contact management triggers are:
 
 ### Key Fields
 
-Same as `CONTACT_CREATE`, but represents the updated state after the change.
+Same as `CONTACT_CREATE`, but represents the updated state after the change. *(Summary only — confirm exact names/encoding/enums against the authoritative [Callbacks & Webhooks](https://developers.sinch.com/docs/conversation/callbacks.md) doc before implementing.)*
 
 ### Common Use Cases
 
@@ -145,6 +154,8 @@ Same as `CONTACT_CREATE`, but represents the updated state after the change.
 | Field        | Description               |
 | ------------ | ------------------------- |
 | `contact_id` | ID of the deleted contact |
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Callbacks & Webhooks](https://developers.sinch.com/docs/conversation/callbacks.md) doc before implementing.)*
 
 Note: Only the contact ID is provided; the contact is already deleted.
 
@@ -203,6 +214,8 @@ Note: Only the contact ID is provided; the contact is already deleted.
 | `deleted_contact_id` | ID of the contact that was deleted during merge      |
 | `preserved_contact`  | Full details of the contact that remains after merge |
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Callbacks & Webhooks](https://developers.sinch.com/docs/conversation/callbacks.md) doc before implementing.)*
+
 ### Common Use Cases
 
 1. **CRM Merge** — Merge corresponding duplicate records in your CRM
@@ -247,6 +260,8 @@ Note: Only the contact ID is provided; the contact is already deleted.
 | `channel`                       | Channel where duplication occurred                  |
 | `identity`                      | The duplicate channel identity (e.g., phone number) |
 | `contact_ids`                   | Array of contact IDs sharing this identity          |
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Callbacks & Webhooks](https://developers.sinch.com/docs/conversation/callbacks.md) doc before implementing.)*
 
 ### Common Use Cases
 

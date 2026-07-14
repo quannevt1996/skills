@@ -3,7 +3,7 @@ name: sinch-provisioning-api
 description: Provisions and manages channel resources for Conversation API projects, including WhatsApp accounts/senders/templates, RCS senders, KakaoTalk senders/templates, webhooks, and bundles. Use when the user asks to onboard channels, configure provisioning webhooks, manage templates, orchestrate multi-service bundles, or automate channel setup.
 metadata:
   author: Sinch
-  version: 1.0.4
+  version: 1.1.0
   category: Messaging
   tags: provisioning, whatsapp, rcs, kakaotalk, channels, templates, bundles
   uses:
@@ -36,12 +36,32 @@ Product gotchas to apply unconditionally:
 - Use `ALL` for webhook triggers when broad coverage is needed.
 - WhatsApp template language delete: `deleteSubmitted` defaults to `false`.
 - Some operations are asynchronous — register a provisioning webhook to receive completion notifications, or poll status endpoints. For bundles, subscribe to `BUNDLE_DONE`.
-- All endpoints return a PAPI Error (`errorCode`, `message`, `resolution`, optional `additionalInformation`) on failure. For `429`/`5xx`, retry with bounded backoff (max 3, exponential + jitter, max 10s delay). For `4xx`, use `resolution` and `additionalInformation` to guide correction.
+- All endpoints return a PAPI Error (`errorCode`, `message`, `resolution`, optional `additionalInformation`) on failure. *(Summary only — confirm exact names/encoding/enums against the authoritative [Provisioning API Reference](https://developers.sinch.com/docs/provisioning-api/api-reference/provisioning-api.md) doc before implementing.)* For `429`/`5xx`, retry with bounded backoff (max 3, exponential + jitter, max 10s delay). For `4xx`, use `resolution` and `additionalInformation` to guide correction.
 - Return resource IDs, resulting state, and next required action in the response to the user.
 
 Refer to the API reference linked in Links for request/response schemas.
 
 **Security**: See the Security section below for url fetching policy, handling inbound webhook content, and credential handling.
+
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `developers.sinch.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `developers.sinch.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **This SKILL.md's own tables, field lists, and snippets (SUMMARIES — not authoritative).**
+   They orient you and point at the right canonical doc; they may lag, omit fields, or
+   simplify nesting. Use them to decide what to build and which doc to open. Do NOT
+   transcribe a field name, nesting, encoding, or enum from this file into shipped code
+   without confirming it in the tier-1 doc. If a detail appears only in a summary, treat
+   it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
 
 ## Getting Started
 
@@ -105,6 +125,8 @@ When selective filtering is requested, choose by family:
 - RCS: `RCS_ACCOUNT_COMMENT_ADDED`, `RCS_SENDER_*`
 - KakaoTalk: `KAKAOTALK_SENDER_*`, `KAKAOTALK_TEMPLATE_*`
 - Bundles: `BUNDLE_DONE`
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Webhooks](https://developers.sinch.com/docs/provisioning-api/api-reference/provisioning-api/webhooks.md) doc before implementing.)*
 
 ## Critical Gotchas
 

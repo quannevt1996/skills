@@ -3,7 +3,7 @@ name: sinch-mailgun-inspect
 description: Checks email quality before sending via Mailgun Inspect API. Use when previewing emails across clients, checking accessibility (WCAG), validating links, validating images, or analyzing email HTML/CSS compatibility.
 metadata:
   author: Sinch
-  version: 1.0.5
+  version: 1.1.0
   category: Email
   tags: email, mailgun, inspect, accessibility, links, images, previews, qa
   uses:
@@ -24,6 +24,8 @@ Mailgun Inspect (by Sinch) is an email pre-send quality control API. Five capabi
 | Code Analysis | `/v1/inspect/analyze` | `html` (no `encoded` field) |
 | Email Previews | `/v1/preview/tests` (V1) / `/v2/preview/tests` (V2) | varies |
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [API Reference (Markdown)](https://documentation.mailgun.com/docs/inspect/api-reference/openapi-final.md) doc before implementing.)*
+
 For full endpoint tables and request schemas, see [references/api-endpoints.md](references/api-endpoints.md).
 
 ## Agent Instructions
@@ -43,6 +45,26 @@ Refer to the API references linked in Links for request/response schemas.
 
 **Security**: See the Security section below for url fetching policy and credential handling.
 
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `documentation.mailgun.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `documentation.mailgun.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **Bundled `references/*.md` (NAVIGATIONAL SUMMARIES — not authoritative).** They orient
+   you and point at the right canonical doc; they may lag, omit fields, or simplify
+   nesting. Use them to decide what to build and which doc to open. Do NOT transcribe a
+   field name, nesting, encoding, or enum from a reference or from the SKILL.md overview
+   into shipped code without confirming it in the tier-1 doc. If a detail appears only in
+   a summary, treat it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
+
 ## Getting Started
 
 ### Agent Credentials handling
@@ -61,6 +83,8 @@ Ensure that authentication headers are properly set when making API calls. Mailg
 --user "api:$MAILGUN_API_KEY"
 ```
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [API Overview](https://documentation.mailgun.com/docs/inspect/api-reference/api-overview) doc before implementing.)*
+
 Keep the Mailgun private API key in environment variables or a secret manager. Avoid generating commands or code that embed the key next to `--user` except via a variable (as in the example above).
 
 See the [sinch-authentication](../sinch-authentication/SKILL.md) skill for full auth setup.
@@ -74,7 +98,7 @@ See the [sinch-authentication](../sinch-authentication/SKILL.md) skill for full 
 
 ### Async Workflow -- Critical
 
-Create responses may return `"status": "Processing"` or `"Completed"` depending on endpoint/workload. You **must** poll the GET endpoint until status is `"Complete"` or `"Completed"` (treat `"Failed"` as terminal error) to get actual results.
+Create responses may return `"status": "Processing"` or `"Completed"` depending on endpoint/workload. You **must** poll the GET endpoint until status is `"Complete"` or `"Completed"` (treat `"Failed"` as terminal error) to get actual results. *(Summary only — confirm exact names/encoding/enums against the authoritative [API Reference (Markdown)](https://documentation.mailgun.com/docs/inspect/api-reference/openapi-final.md) doc before implementing.)*
 
 ### Canonical Example: Accessibility Test
 
@@ -103,7 +127,7 @@ Each capability accepts different input types. Pick the right one:
 - **Have raw HTML?** Use the `html` field directly. For accessibility, set `encoded: false`. For links/images, use the `/html-validate` sub-endpoint. For code analysis, POST to `/v1/inspect/analyze`.
 - **Have a list of URLs?** Links and images accept a `links` array of URLs -- no HTML needed.
 - **Have an image file?** Use `/v1/inspect/images/upload`.
-- **Using base64?** Only accessibility supports `encoded: true`. Code analysis does not use an `encoded` boolean; use supported request fields (`html`/`url`/`mime`/`transfer_encoding`/`charset`).
+- **Using base64?** Only accessibility supports `encoded: true`. Code analysis does not use an `encoded` boolean; use supported request fields (`html`/`url`/`mime`/`transfer_encoding`/`charset`). *(Summary only — confirm exact names/encoding/enums against the authoritative [API Reference (Markdown)](https://documentation.mailgun.com/docs/inspect/api-reference/openapi-final.md) doc before implementing.)*
 
 ### Endpoint Path Gotchas
 
@@ -115,7 +139,7 @@ These paths are commonly confused:
 
 ### Response Lifecycle
 
-1. **POST** returns `{"meta": {"status": "Processing"}, "items": {"id": "abc123", ...}}`
+1. **POST** returns `{"meta": {"status": "Processing"}, "items": {"id": "abc123", ...}}` *(Summary only — confirm exact names/encoding/enums against the authoritative [API Reference (Markdown)](https://documentation.mailgun.com/docs/inspect/api-reference/openapi-final.md) doc before implementing.)*
 2. **GET** poll until status is `"Complete"` or `"Completed"` (treat `"Failed"` as terminal error)
 3. **DELETE** clean up when done
 
@@ -132,6 +156,8 @@ For a complete email quality check, fire all four HTML-based tests in parallel, 
 3. `POST /v1/inspect/images/html-validate` -- body: `{"html": "..."}`
 4. `POST /v1/inspect/analyze` -- body: `{"html": "..."}`
 5. Poll each `GET /v1/inspect/{category}/{test_id}` until complete
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [API Reference (Markdown)](https://documentation.mailgun.com/docs/inspect/api-reference/openapi-final.md) doc before implementing.)*
 
 **V2 shortcut**: If also generating email previews, `POST /v2/preview/tests` can trigger all four content checks in one call by including content-checking fields in the request body. See [references/api-endpoints.md § Email Previews](references/api-endpoints.md#email-previews).
 
@@ -151,7 +177,7 @@ Filter results by client support when retrieving code analysis:
 
 `GET /v1/inspect/analyze/{id}?support_type=n&application_type=web`
 
-Values: `support_type` = y/a/n/u (yes/anomaly/no/unknown), `application_type` = web/mobile/desktop.
+Values: `support_type` = y/a/n/u (yes/anomaly/no/unknown), `application_type` = web/mobile/desktop. *(Summary only — confirm exact names/encoding/enums against the authoritative [API Reference (Markdown)](https://documentation.mailgun.com/docs/inspect/api-reference/openapi-final.md) doc before implementing.)*
 
 ## Gotchas and Best Practices
 

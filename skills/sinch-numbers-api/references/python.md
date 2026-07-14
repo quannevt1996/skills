@@ -1,3 +1,8 @@
+> **Summary — not the spec.** This file orients you and links to the authoritative
+> `developers.sinch.com` doc; it may lag, omit fields, or simplify nesting. Do **not**
+> copy field names, nesting, encodings, or enums from here into shipped code without
+> confirming them in the linked doc. See "Source of Truth" in this skill's SKILL.md.
+
 # Python — Numbers SDK Reference
 
 `pip install sinch` (v2.0.0+)

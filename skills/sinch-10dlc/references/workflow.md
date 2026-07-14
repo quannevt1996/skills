@@ -1,3 +1,8 @@
+> **Summary — not the spec.** This file orients you and links to the authoritative
+> `developers.sinch.com` doc; it may lag, omit fields, or simplify nesting. Do **not**
+> copy field names, nesting, encodings, or enums from here into shipped code without
+> confirming them in the linked doc. See "Source of Truth" in this skill's SKILL.md.
+
 # 10DLC Registration Workflow — Detailed Steps
 
 Complete reference for the 6-step 10DLC registration workflow. See the main [SKILL.md](../SKILL.md) for overview and summary.
@@ -27,6 +32,8 @@ The request body uses **nested objects**: `companyDetails`, `financialDetails`, 
 
   When unclear, ask the user. The vertical does not affect approval but must be accurate.
 - `exchange`: A free-form string field (not an enum). Use an empty string `""` for private/nonprofit companies. For public companies, pass the exchange name (e.g., `"NYSE"`, `"NASDAQ"`, `"AMEX"`, `"TSX"`, `"LSE"`).
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Register a Brand](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-brand-registration/brandregistrationservice_createbrandregistrationrequest.md) doc before implementing.)*
 
 See [Register a Brand](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-brand-registration/brandregistrationservice_createbrandregistrationrequest.md) for request/response details.
 
@@ -79,6 +86,8 @@ See [Check Brand Registration Status](https://developers.sinch.com/docs/10dlc-re
 - Status `UPGRADE` → brand is being upgraded from SIMPLIFIED to FULL; poll again until it resolves
 - Status `REJECTED` → check [brand feedback](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-brand-registration/brandregistrationservice_getbrandregistrationfeedback.md) for rejection reason, then fix and re-register
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Check Brand Registration Status](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-brand-registration/brandregistrationservice_getbrandregistrationrequest.md) doc before implementing.)*
+
 Common rejection categories: `TAX_ID` (EIN mismatch), `STOCK_SYMBOL` (stock info mismatch), `GOVERNMENT_ENTITY`, `NONPROFIT`.
 
 **Polling strategy:**
@@ -119,6 +128,8 @@ Key points:
 - `affiliateMarketing` has **no default** — must be explicitly set to `true` or `false`
 - All keyword fields (`optinKeywords`, `optoutKeywords`, `helpKeywords`) are comma-separated with no spaces
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Create a Campaign (API reference)](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration/campaignregistrationexternalservice_createtcrcampaign.md) doc before implementing.)*
+
 For the full field reference, constraints, and a complete curl example, see [Campaign Registration Fields](campaign-fields.md). For the raw API schema, see [Create a Campaign (API reference)](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration/campaignregistrationexternalservice_createtcrcampaign.md).
 
 **Success:** Response includes `campaignRegistrationId` (Sinch ULID format — not the TCR campaign ID, which is assigned after TCR approval).
@@ -133,6 +144,8 @@ Set `attachments: true` when creating the campaign (Step 4) to delay submission 
 - **Limits:** max 10MB per file, max 5 files per category
 - **Workflow:** set `submitCampaign: false` for all but the last file, then `submitCampaign: true` on the final upload to submit the campaign
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Upload Supporting Documents](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration/campaignregistrationexternalservice_uploadcampaignfiles.md) doc before implementing.)*
+
 See [Upload Supporting Documents](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration/campaignregistrationexternalservice_uploadcampaignfiles.md) for request/response details.
 
 ## Step 6: Wait for Campaign Approval
@@ -141,7 +154,7 @@ Same async pattern as brand: poll and wait. No webhooks.
 
 See [Check Campaign Status](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration/campaignregistrationexternalservice_getcampaign.md) for request/response details.
 
-Campaign status flow: `SINCH_REVIEW` → `SINCH_APPROVED` → `SUBMITTED` → `APPROVED` / `ACTIVE` (or `SINCH_REJECTED` / `REJECTED` / `SUBMISSION_FAILED` at various stages).
+Campaign status flow: `SINCH_REVIEW` → `SINCH_APPROVED` → `SUBMITTED` → `APPROVED` / `ACTIVE` (or `SINCH_REJECTED` / `REJECTED` / `SUBMISSION_FAILED` at various stages). *(Summary only — confirm exact names/encoding/enums against the authoritative [Check Campaign Status](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration/campaignregistrationexternalservice_getcampaign.md) doc before implementing.)*
 
 **Polling strategy:**
 - Poll every **60 minutes**.
