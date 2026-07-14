@@ -3,7 +3,7 @@ name: sinch-porting-api
 description: "Port phone numbers from other carriers into Sinch with the Porting API. Automates port-in order creation, portability checks, order tracking, on-demand activation, and webhook notifications. Use when porting numbers, checking portability, creating port-in orders, tracking port status, activating ported numbers, uploading LOA documents, or configuring porting defaults."
 metadata:
   author: Sinch
-  version: 1.0.4
+  version: 1.1.0
   category: Numbers
   tags: porting, port-in, number-transfer, carrier, portability, loa, foc, activation
   uses:
@@ -27,6 +27,26 @@ Before generating code, gather from the user (skip any item already specified in
 Refer to the API reference linked in Links for request/response schemas.
 
 **Security**: See the Security section below for url fetching policy, handling inbound webhook content, and credential handling.
+
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `developers.sinch.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `developers.sinch.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **This SKILL.md's own tables, field lists, and snippets (SUMMARIES — not authoritative).**
+   They orient you and point at the right canonical doc; they may lag, omit fields, or
+   simplify nesting. Use them to decide what to build and which doc to open. Do NOT
+   transcribe a field name, nesting, encoding, or enum from this file into shipped code
+   without confirming it in the tier-1 doc. If a detail appears only in a summary, treat
+   it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
 
 ## Getting Started
 
@@ -126,6 +146,8 @@ curl -X POST \
   }'
 ```
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Create Port-In Order](https://developers.sinch.com/docs/numbers/api-reference/porting/port-in-numbers/orderportin.md) doc before implementing.)*
+
 > `existingPortOutPin` — Obtain this PIN from the losing carrier before submitting the order. See [Create Port-In Order](https://developers.sinch.com/docs/numbers/api-reference/porting/port-in-numbers/orderportin.md) for full field reference.
 
 Response:
@@ -221,18 +243,18 @@ curl -X POST \
 ## Key Concepts
 
 - **Port-In Order** — A request to transfer one or more phone numbers from another carrier to Sinch. Each order has a numeric `id` and tracks the overall lifecycle.
-- **Order Status** — Lifecycle of a port-in order: `PENDING` (can update/cancel) → `CONFIRMED` (locked, awaiting port date) → `COMPLETED` (numbers active). Also: `PENDING_CANCELATION` → `CANCELED`.
-- **Phone Number Status** — Per-number status within an order: `PENDING` → `CONFIRMED` → `ACTIVATED`. Also: `REJECTED` (see `rejectReason`), `CANCELED`, `EXCLUDED` (see `exclusionReason`).
+- **Order Status** — Lifecycle of a port-in order: `PENDING` (can update/cancel) → `CONFIRMED` (locked, awaiting port date) → `COMPLETED` (numbers active). Also: `PENDING_CANCELATION` → `CANCELED`. *(Summary only — confirm exact names/encoding/enums against the authoritative [Port-In Numbers API Reference](https://developers.sinch.com/docs/numbers/api-reference/porting/port-in-numbers.md) doc before implementing.)*
+- **Phone Number Status** — Per-number status within an order: `PENDING` → `CONFIRMED` → `ACTIVATED`. Also: `REJECTED` (see `rejectReason`), `CANCELED`, `EXCLUDED` (see `exclusionReason`). *(Summary only — confirm exact names/encoding/enums against the authoritative [Port-In Numbers API Reference](https://developers.sinch.com/docs/numbers/api-reference/porting/port-in-numbers.md) doc before implementing.)*
 - **FOC (Firm Order Confirmation)** — The confirmed port date set by the losing carrier. Returned as `focDate` on each phone number once confirmed. On-demand activation requires FOC date to be today or earlier.
-- **End User** — The person or company that currently owns the number. Required fields: `name`, `streetNum`, `streetName`, `city`, `state`, `zipCode`. Must match the losing carrier's records exactly.
+- **End User** — The person or company that currently owns the number. Required fields: `name`, `streetNum`, `streetName`, `city`, `state`, `zipCode`. Must match the losing carrier's records exactly. *(Summary only — confirm exact names/encoding/enums against the authoritative [Create Port-In Order](https://developers.sinch.com/docs/numbers/api-reference/porting/port-in-numbers/orderportin.md) doc before implementing.)*
 - **Port-Out Info** — Credentials from the losing carrier. Usually only `existingPortOutPin` is needed. May also include `accountNum`, `accountPhoneNumber`, `authorizingName`, `authorizingDate`.
 - **LOA (Letter of Authorization)** — A document authorizing the port. Upload via `POST /orders/portIns/{orderId}/documents`.
 - **On-Demand Activation** — When `onDemandActivation: true`, numbers are not auto-activated on the port date. Instead, call `POST /orders/portIns/{orderId}/activate` after FOC date is reached and numbers are routing on Sinch network.
-- **Voice Configuration** — Optional per-number config for voice routing. Discriminated on `type`: `RTC` (programmable voice, requires `appId`), `EST` (elastic SIP trunking, requires `trunkId`), `FAX` (requires `serviceId`).
+- **Voice Configuration** — Optional per-number config for voice routing. Discriminated on `type`: `RTC` (programmable voice, requires `appId`), `EST` (elastic SIP trunking, requires `trunkId`), `FAX` (requires `serviceId`). *(Summary only — confirm exact names/encoding/enums against the authoritative [Create Port-In Order](https://developers.sinch.com/docs/numbers/api-reference/porting/port-in-numbers/orderportin.md) doc before implementing.)*
 - **Messaging Configuration** — Optional per-number config for messaging features. Supports `A2PLC` (Application-to-Person Long Code) and `SMSMMS` feature types. Configured alongside voice options on each phone number in the order.
 - **E911** — Optional per-number emergency location data. Submitted as part of the phone number entry in a port-in order for numbers that require E911 service.
 - **Directory Listing** — Optional per-number directory listing information (e.g., name and address for directory assistance). Provided as part of the phone number entry in a port-in order.
-- **Desired Port Schedule** — Required. Contains `desiredPortDate` (ISO date, required), `desiredPortTime` (defaults to project config or `09:00:00`), `desiredPortTimeZone` (one of: `US/Eastern`, `US/Central`, `US/Mountain`, `US/Pacific`).
+- **Desired Port Schedule** — Required. Contains `desiredPortDate` (ISO date, required), `desiredPortTime` (defaults to project config or `09:00:00`), `desiredPortTimeZone` (one of: `US/Eastern`, `US/Central`, `US/Mountain`, `US/Pacific`). *(Summary only — confirm exact names/encoding/enums against the authoritative [Create Port-In Order](https://developers.sinch.com/docs/numbers/api-reference/porting/port-in-numbers/orderportin.md) doc before implementing.)*
 - **Configuration** — Project-level defaults for porting: default contact info, webhook URL, default port time and timezone. Set via `POST /configuration`, updated via `PUT /configuration`.
 
 ## Common Patterns
@@ -270,7 +292,7 @@ curl -X POST \
 - **Max 500 numbers per order** — For orders with more than 500 numbers, contact [Sinch support](https://support.sinch.com).
 - **Update is a full PUT, not PATCH** — `PUT /orders/portIns/{orderId}` requires the complete order object. Omitting fields will clear them.
 - **Only PENDING orders can be updated or canceled** — Once `CONFIRMED`, orders cannot be modified. Cancel creates `PENDING_CANCELATION` state during which the same numbers cannot be resubmitted.
-- **End user info must match the losing carrier's records** — Mismatched name, address, or account details cause rejections. `typeOfService` defaults to `B` (Business); set to `R` for residential.
+- **End user info must match the losing carrier's records** — Mismatched name, address, or account details cause rejections. `typeOfService` defaults to `B` (Business); set to `R` for residential. *(Summary only — confirm exact names/encoding/enums against the authoritative [Create Port-In Order](https://developers.sinch.com/docs/numbers/api-reference/porting/port-in-numbers/orderportin.md) doc before implementing.)*
 - **Port-out PIN is usually sufficient** — Most carriers only require `existingPortOutPin` in `portOutInfo`. Only provide `accountNum`, `accountPhoneNumber`, `authorizingName` if the carrier requires them.
 - **`authorizingDate` cannot be in the future** — Must be today or earlier.
 - **Default port time is 09:00 US/Eastern** — If you don't set `desiredPortTime` and `desiredPortTimeZone` on the order and haven't configured project defaults, the system uses `09:00:00 US/Eastern`.

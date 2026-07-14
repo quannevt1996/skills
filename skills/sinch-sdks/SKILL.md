@@ -3,7 +3,7 @@ name: sinch-sdks
 description: "Sinch SDK installation and client initialization for Node.js, Python, Java, and .NET. Use when installing a Sinch SDK, initializing SinchClient, setting up SDK credentials, configuring conversation region in SDK, or building a multi-product SDK client. For In-App Calling SDKs, see sinch-in-app-calling."
 metadata:
   author: Sinch
-  version: 1.0.1
+  version: 1.1.0
   category: Core
   tags: sdk, node, python, java, dotnet, sinch-client, installation
   uses:
@@ -21,6 +21,26 @@ For authentication setup (credentials, OAuth2, Basic auth, signed requests), see
 ## Agent Instructions
 
 If the user hasn't specified which language or platform, ask first — the SDK and init pattern differ by language. Use the table below to route to the correct reference.
+
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `developers.sinch.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `developers.sinch.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **Bundled `references/*.md` (NAVIGATIONAL SUMMARIES — not authoritative).** They orient
+   you and point at the right canonical doc; they may lag, omit fields, or simplify
+   nesting. Use them to decide what to build and which doc to open. Do NOT transcribe a
+   field name, nesting, encoding, or enum from a reference or from the SKILL.md overview
+   into shipped code without confirming it in the tier-1 doc. If a detail appears only in
+   a summary, treat it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
 
 ## SDK Installation
 
@@ -78,7 +98,7 @@ If language is unknown, ask first. The SDKs handle token refresh automatically.
 
 **Multi-product client** — Provide both project and application credentials in a single `SinchClient` to access all APIs.
 
-**Conversation region** — Must be set explicitly when using the Conversation API. Values: `us`, `eu`, `br`. Required in Python SDK v2.0.0+ and Java SDK v2.0.0+; recommended in Node.js and .NET.
+**Conversation region** — Must be set explicitly when using the Conversation API. Values: `us`, `eu`, `br`. Required in Python SDK v2.0.0+ and Java SDK v2.0.0+; recommended in Node.js and .NET. *(Summary only — confirm exact names/encoding/enums against the authoritative [Sinch Developer Docs](https://developers.sinch.com) doc before implementing.)*
 
 ## Common Patterns
 

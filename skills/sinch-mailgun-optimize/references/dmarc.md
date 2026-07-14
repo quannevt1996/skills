@@ -1,3 +1,8 @@
+> **Summary — not the spec.** This file orients you and links to the authoritative
+> `developers.sinch.com` doc; it may lag, omit fields, or simplify nesting. Do **not**
+> copy field names, nesting, encodings, or enums from here into shipped code without
+> confirming them in the linked doc. See "Source of Truth" in this skill's SKILL.md.
+
 # DMARC Reports — Endpoint Reference
 
 Base path: `/v1/dmarc/`
@@ -16,6 +21,8 @@ Requires a DMARC DNS record configured on the domain before report data becomes 
 | `/v1/dmarc/domains/{domain}/s/{source}` | GET | Drill down by sending source |
 | `/v1/dmarc/domains/{domain}/s/{source}/h/{host}` | GET | Drill down by host within a source |
 | `/v1/dmarc/domains/{domain}/s/{source}/h/{host}/ip/{ip}` | GET | Drill down to a specific sending IP |
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [API docs](https://documentation.mailgun.com/docs/inboxready/api-reference/optimize/inboxready/dmarc-reports) doc before implementing.)*
 
 ## Drill-Down Hierarchy
 

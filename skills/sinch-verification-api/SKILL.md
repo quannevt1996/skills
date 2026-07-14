@@ -3,7 +3,7 @@ name: sinch-verification-api
 description: Verify phone numbers via SMS, Flashcall, Phone Call, Data (seamless carrier-level), or WhatsApp with Sinch Verification API. Use when implementing user phone verification, OTP, two-factor authentication, or number ownership confirmation flows.
 metadata:
   author: Sinch
-  version: 1.0.4
+  version: 1.1.0
   category: Verification
   tags: verification, otp, sms, flashcall, 2fa, phone-verification, whatsapp
   uses:
@@ -29,6 +29,26 @@ When the user chooses **SDK**, refer to the [sinch-sdks](../sinch-sdks/SKILL.md)
 When the user chooses **direct API calls**, refer to the Verification API Reference linked in Links for request/response schemas.
 
 **Security**: See the Security section below for url fetching policy, handling inbound callback content, and credential handling.
+
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `developers.sinch.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `developers.sinch.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **This SKILL.md's own tables, field lists, and snippets (SUMMARIES — not authoritative).**
+   They orient you and point at the right canonical doc; they may lag, omit fields, or
+   simplify nesting. Use them to decide what to build and which doc to open. Do NOT
+   transcribe a field name, nesting, encoding, or enum from this file into shipped code
+   without confirming it in the tier-1 doc. If a detail appears only in a summary, treat
+   it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
 
 ## Getting Started
 
@@ -84,7 +104,7 @@ curl -X POST \
   }'
 ```
 
-Response includes `id` (verification ID), `sms.template`, `sms.interceptionTimeout`, and `_links` with localized URLs for status/report actions.
+Response includes `id` (verification ID), `sms.template`, `sms.interceptionTimeout`, and `_links` with localized URLs for status/report actions. *(Summary only — confirm exact names/encoding/enums against the authoritative [Verification API Reference](https://developers.sinch.com/docs/verification/api-reference/verification.md) doc before implementing.)*
 
 ## Key Concepts
 
@@ -98,12 +118,14 @@ Response includes `id` (verification ID), `sms.template`, `sms.interceptionTimeo
 | Data | `seamless` | Carrier-level verification via mobile data. No user interaction. Requires account manager to enable. |
 | WhatsApp | `whatsapp` | Sends OTP via WhatsApp message. User enters code. |
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Verification API Reference](https://developers.sinch.com/docs/verification/api-reference/verification.md) doc before implementing.)*
+
 ### Core Model
 
 - **Identity**: Always `{ "type": "number", "endpoint": "+E164_NUMBER" }`
 - **Verification ID**: Returned on start. Used to report code or query status.
 - **Reference**: Optional unique tracking string in start request. Queryable via status endpoint.
-- **Statuses**: `PENDING` | `SUCCESSFUL` | `FAIL` | `DENIED` | `ABORTED` | `ERROR`
+- **Statuses**: `PENDING` | `SUCCESSFUL` | `FAIL` | `DENIED` | `ABORTED` | `ERROR` *(Summary only — confirm exact names/encoding/enums against the authoritative [Verification API Reference](https://developers.sinch.com/docs/verification/api-reference/verification.md) doc before implementing.)*
 - **Failure reasons** (most common): `Invalid code`, `Expired`, `Fraud`, `Blocked`, `Denied by callback`. Full list in the [API Reference](https://developers.sinch.com/docs/verification/api-reference/verification.md).
 
 ## API Endpoints
@@ -114,7 +136,7 @@ All endpoints documented in the [Verification API Reference](https://developers.
 
 `POST /verification/v1/verifications`
 
-Set `method` to `sms`, `flashcall`, `callout`, `seamless`, or `whatsapp`. Optional fields:
+Set `method` to `sms`, `flashcall`, `callout`, `seamless`, or `whatsapp`. *(Summary only — confirm exact names/encoding/enums against the authoritative [Verification API Reference](https://developers.sinch.com/docs/verification/api-reference/verification.md) doc before implementing.)* Optional fields:
 - `reference` — unique tracking string, passed to all events
 - `custom` — arbitrary text (max 4096 chars), passed to all events
 - `Accept-Language` header — controls SMS language (default `en-US`)
@@ -127,8 +149,8 @@ Report by identity: `PUT /verification/v1/verifications/number/{endpoint}`
 Report by ID: `PUT /verification/v1/verifications/id/{id}`
 
 Body includes `method` and a method-specific object with the user's input:
-- SMS / Phone Call / WhatsApp: `{ "method": "sms", "sms": { "code": "1234" } }` (replace method name + key accordingly)
-- FlashCall: `{ "method": "flashcall", "flashCall": { "cli": "+46000000000" } }` — the `cli` is the **full international caller ID** from the incoming missed call
+- SMS / Phone Call / WhatsApp: `{ "method": "sms", "sms": { "code": "1234" } }` (replace method name + key accordingly) *(Summary only — confirm exact names/encoding/enums against the authoritative [Verification API Reference](https://developers.sinch.com/docs/verification/api-reference/verification.md) doc before implementing.)*
+- FlashCall: `{ "method": "flashcall", "flashCall": { "cli": "+46000000000" } }` — the `cli` is the **full international caller ID** from the incoming missed call *(Summary only — confirm exact names/encoding/enums against the authoritative [Verification API Reference](https://developers.sinch.com/docs/verification/api-reference/verification.md) doc before implementing.)*
 
 ### Get Verification Status
 
@@ -152,7 +174,7 @@ If the code expires or verification fails, you **cannot re-report** — start a 
 
 For production flows, configure a callback URL in the Sinch Dashboard. The API sends:
 
-- **VerificationRequestEvent** — fired when a verification starts. Respond with `action: allow` or `action: deny` to approve/reject.
+- **VerificationRequestEvent** — fired when a verification starts. Respond with `action: allow` or `action: deny` to approve/reject. *(Summary only — confirm exact names/encoding/enums against the authoritative [Verification API Reference](https://developers.sinch.com/docs/verification/api-reference/verification.md) doc before implementing.)*
 - **VerificationResultEvent** — fired when a verification completes (success or failure). Use for logging, analytics, or triggering downstream actions.
 
 Callbacks are signed — verify signatures using [Callback Signing](https://developers.sinch.com/docs/verification/api-reference/authentication/callback-signed-request.md).
@@ -161,7 +183,7 @@ Callbacks are signed — verify signatures using [Callback Signing](https://deve
 
 1. **Auth is Application Key + Secret, not OAuth2.** Do not use project-level credentials.
 2. **Use Application Signed Requests in production.** Application auth protects integrity of a request
-3. **Base64-decode the secret before signing.** The dashboard value is base64-encoded.
+3. **Base64-decode the secret before signing.** The dashboard value is base64-encoded. *(Summary only — confirm exact names/encoding/enums against the authoritative [Application Signed Requests](https://developers.sinch.com/docs/verification/api-reference/authentication/application-signed-request.md) doc before implementing.)*
 4. **FlashCall auto-intercepts on Android only.** iOS/JS users must manually enter the incoming number. Android SDK is required to intercept calls.
 5. **Method availability varies by country.** SMS is the most widely available.
 6. **Codes expire.** Configurable via `smsOptions.expiry`. Start a new verification if expired — you cannot re-report on a completed/expired verification.

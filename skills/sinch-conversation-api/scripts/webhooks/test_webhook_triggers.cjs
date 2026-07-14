@@ -1,4 +1,11 @@
 #!/usr/bin/env node
+/*
+ * EXECUTION TOOL — not a schema reference.
+ * Run this to PERFORM a task (e.g. create a webhook, send a test message) when you do not
+ * need to write application code. Do NOT copy its payload literals or logic into a new
+ * codebase as if they were the API spec — load the authoritative developers.sinch.com doc
+ * instead. See "Source of Truth" in this skill's SKILL.md.
+ */
 /**
  * Test webhook triggers by sending example payloads to a test URL.
  *

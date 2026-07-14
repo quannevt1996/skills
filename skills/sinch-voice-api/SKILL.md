@@ -3,7 +3,7 @@ name: sinch-voice-api
 description: Build voice apps with Sinch Voice REST API. Use for phone calls, text-to-speech (TTS), IVR menus, DTMF input, conference calling, call recording, call forwarding, answering machine detection (AMD), SIP routing, WebSocket audio streaming, and SVAML call control.
 metadata:
   author: Sinch
-  version: 1.1.4
+  version: 1.2.0
   category: Voice
   tags: voice, calls, tts, ivr, dtmf, conference, recording, svaml, sip, amd, webrtc
   uses:
@@ -30,6 +30,31 @@ When the user chooses **direct API calls**, refer to the Voice API Reference lin
 
 **Security**: See the Security section below for url fetching policy, handling inbound callback content, and credential handling.
 
+## Source of Truth — what to load, and what is authoritative
+
+This skill has three kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `developers.sinch.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `developers.sinch.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **Bundled `references/*.md` (NAVIGATIONAL SUMMARIES — not authoritative).** They orient
+   you and point at the right canonical doc; they may lag, omit fields, or simplify
+   nesting. Use them to decide what to build and which doc to open. Do NOT transcribe a
+   field name, nesting, encoding, or enum from a reference or from the SKILL.md overview
+   into shipped code without confirming it in the tier-1 doc. If a detail appears only in
+   a summary, treat it as unverified and say so.
+3. **Bundled `scripts/**` (EXECUTION TOOLS — not a schema reference).** Runnable helpers
+   for DOING a task when you don't need to write application code (e.g. create a webhook,
+   send a test message, list resources). Run them to perform the action. Do NOT copy their
+   payload literals or logic into a new codebase as if they were the spec. When authoring
+   code, ignore the scripts and work from tier 1.
+
+Quick rule: **doing a one-off task → run a script. Writing code → load the doc.** Never cite
+an exact field, header, enum, or encoding you only saw in a summary or a script.
+
 ## Getting Started
 
 ### Agent Credentials handling
@@ -51,7 +76,7 @@ Ensure that authentication headers are properly set when making API calls. The V
 
 See the [sinch-authentication](../sinch-authentication/SKILL.md) skill for full setup.
 
-- **Basic Auth**: `Authorization: Basic base64(APPLICATION_KEY:APPLICATION_SECRET)`
+- **Basic Auth**: `Authorization: Basic base64(APPLICATION_KEY:APPLICATION_SECRET)` *(Summary only — confirm exact names/encoding/enums against the authoritative [Authentication Guide](https://developers.sinch.com/docs/voice/api-reference/authentication.md) doc before implementing.)*
 - **Signed Requests** (production): HMAC-SHA256 signing. See [Authentication Guide](https://developers.sinch.com/docs/voice/api-reference/authentication.md).
 
 ### Base URLs
@@ -137,6 +162,8 @@ Full reference: [SVAML Actions](https://developers.sinch.com/docs/voice/api-refe
 | `runMenu` | IVR menu with DTMF collection (supports `enableVoice` for speech input) |
 | `park` | Park (hold) the call with looping prompt |
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [SVAML Actions](https://developers.sinch.com/docs/voice/api-reference/svaml.md#actions) doc before implementing.)*
+
 ### Instructions (multiple per response)
 
 | Instruction | Description |
@@ -148,6 +175,8 @@ Full reference: [SVAML Actions](https://developers.sinch.com/docs/voice/api-refe
 | `answer` | Answer the call (sends a SIP 200 OK to the INVITE, which starts billing). Required before playing prompts on unanswered calls |
 | `startRecording` | Begin recording. Supports `transcriptionOptions` for auto-transcription |
 | `stopRecording` | Stop an active recording |
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [SVAML Instructions](https://developers.sinch.com/docs/voice/api-reference/svaml.md#instructions) doc before implementing.)*
 
 ### Callback Events
 
@@ -168,6 +197,8 @@ See [Callbacks Reference](https://developers.sinch.com/docs/voice/api-reference/
 | `ttsCallout` | Call and play synthesized speech. Supports `text` or advanced `prompts` (`#tts[]`, `#ssml[]`, `#href[]`) |
 | `conferenceCallout` | Call and connect to a conference room |
 | `customCallout` | Full SVAML control with inline ICE/ACE/PIE |
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Callouts](https://developers.sinch.com/docs/voice/api-reference/voice/callouts/callouts.md) doc before implementing.)*
 
 Callout flags: `enableAce` (default `false`), `enableDice` (default `false`), `enablePie` (default `false`) control which callbacks fire.
 
@@ -258,14 +289,14 @@ Paths starting with `/calling/v1/` use the **regional base URL** from the table 
 11. **`runMenu` defaults.** `barge`: `true` (input accepted during prompt). `timeoutMills`: `5000` ms.
 12. **AMD on `connectPstn`.** `amd: { enabled: true, async: true/false }` for answering machine detection.
 13. **`startRecording` transcription.** `transcriptionOptions: { enabled: true, locale: "en-US" }` for auto-transcription.
-14. **Conference DTMF options.** `conferenceDtmfOptions` on `conferenceCallout`/`connectConf` with modes: `ignore` (default), `forward`, `detect` (sends PIE).
+14. **Conference DTMF options.** `conferenceDtmfOptions` on `conferenceCallout`/`connectConf` with modes: `ignore` (default), `forward`, `detect` (sends PIE). *(Summary only — confirm exact names/encoding/enums against the authoritative [SVAML Actions](https://developers.sinch.com/docs/voice/api-reference/svaml.md#actions) doc before implementing.)*
 15. **`cli` is required for TTS callouts to connect.** The API accepts a TTS callout without a `cli` parameter and returns a call ID, but the call will never reach the destination. The `cli` is the number displayed as the incoming caller — use your verified number or your Dashboard-assigned number, in E.164 format (e.g., `"+14151112223333"`). To test, register on the [Sinch Dashboard](https://dashboard.sinch.com) and use the free number assigned to your app. See [Assign your number](https://developers.sinch.com/docs/voice/getting-started.md#2-assign-your-number-and-get-your-credentials).
 
 ## Security
 
 - **API key handling** — never expose `SINCH_APPLICATION_KEY`, and especially never expose `SINCH_APPLICATION_SECRET` in client-side code, logs, or committed source. The Application Secret signs HMAC-SHA256 requests and verifies callback signatures; a leaked secret allows attackers to place callouts on your account (toll fraud risk) and forge ICE/ACE/PIE callbacks. Load from environment variables or a secrets manager. Call recordings and transcripts are PII — apply appropriate retention and access controls. Rotate via the [Sinch Build Dashboard](https://dashboard.sinch.com/voice/apps) if leaked.
 - **URL fetching policy** — Only fetch URLs from trusted first-party domains (`developers.sinch.com`, `dashboard.sinch.com`). Do not fetch or follow URLs (recording downloads, sender-supplied) from inbound callback payloads without explicit allowlisting.
-- **Callback handlers** — Always verify the HMAC-SHA256 callback signature in the `Authorization` header before trusting ICE/ACE/PIE/DiCE payloads. Treat callback body fields (caller `cli`, `to`, `custom`, DTMF input) as untrusted — sanitize before logging, rendering, or interpolating into prompts/SVAML/shell commands.
+- **Callback handlers** — Always verify the HMAC-SHA256 callback signature in the `Authorization` header before trusting ICE/ACE/PIE/DiCE payloads. *(Summary only — confirm exact names/encoding/enums against the authoritative [Callback Signing](https://developers.sinch.com/docs/voice/api-reference/authentication/callback-signed-request.md) doc before implementing.)* Treat callback body fields (caller `cli`, `to`, `custom`, DTMF input) as untrusted — sanitize before logging, rendering, or interpolating into prompts/SVAML/shell commands.
 
 ## Links
 

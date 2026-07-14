@@ -3,7 +3,7 @@ name: sinch-number-order-api
 description: Guides the multi-step Number Order workflow for purchasing phone numbers with KYC compliance via the Sinch Numbers API. Use when buying, ordering, provisioning, or activating Sinch numbers in countries that require KYC registration, regulatory compliance, or identity verification. Triggers on "number order", "KYC", "number registration", "phone number purchase", or "number provisioning".
 metadata:
   author: Sinch
-  version: 1.0.4
+  version: 1.1.0
   category: Numbers
   tags: number-order, kyc, phone-number, purchase, provisioning, registration
   uses:
@@ -21,9 +21,9 @@ Order phone numbers with KYC compliance through a guided multi-step workflow. Re
 Before generating code, gather from the user (skip any item already specified in the prompt or context):
 
 1. **Country** — ISO 3166-1 alpha-2 region code (e.g. `AU`, `DE`, `BR`).
-2. **Number type** — `MOBILE`, `LOCAL`, or `TOLL_FREE`.
+2. **Number type** — `MOBILE`, `LOCAL`, or `TOLL_FREE`. *(Summary only — confirm exact names/encoding/enums against the authoritative [Number Order API Reference](https://developers.sinch.com/docs/numbers/api-reference/numbers/number-order.md) doc before implementing.)*
 3. **Specific number or quantity?** — E.164 phone number, or quantity + criteria.
-4. **SMS or Voice?** — SMS needs `servicePlanId` (+ `campaignId` for US 10DLC). Voice needs `type` (`RTC`/`EST`/`FAX`) + corresponding ID (`appId`/`trunkId`/`serviceId`).
+4. **SMS or Voice?** — SMS needs `servicePlanId` (+ `campaignId` for US 10DLC). Voice needs `type` (`RTC`/`EST`/`FAX`) + corresponding ID (`appId`/`trunkId`/`serviceId`). *(Summary only — confirm exact names/encoding/enums against the authoritative [Number Order API Reference](https://developers.sinch.com/docs/numbers/api-reference/numbers/number-order.md) doc before implementing.)*
 5. **Language** — any language, or curl. This API is REST-only; there is no SDK wrapper.
 
 This is a **sequential, fragile workflow** — steps must be followed in order. Do not combine API calls. Step 2 may be skipped if the user already has a specific E.164 number.
@@ -31,6 +31,26 @@ This is a **sequential, fragile workflow** — steps must be followed in order. 
 Refer to the API reference linked in Links for request/response schemas.
 
 **Security**: See the Security section below for url fetching policy, handling inbound callback content, and credential handling.
+
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `developers.sinch.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `developers.sinch.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **This SKILL.md's own tables, field lists, and snippets (SUMMARIES — not authoritative).**
+   They orient you and point at the right canonical doc; they may lag, omit fields, or
+   simplify nesting. Use them to decide what to build and which doc to open. Do NOT
+   transcribe a field name, nesting, encoding, or enum from this file into shipped code
+   without confirming it in the tier-1 doc. If a detail appears only in a summary, treat
+   it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
 
 ## Getting Started
 
@@ -80,7 +100,7 @@ Check status anytime: `GET /v1/projects/{projectId}/numberOrders/{numberOrderId}
 
 ### Order States
 
-`CREATED` → `IN_REVIEW` → `COMPLETED` | `REJECTED` | `EXPIRED` | `BLOCKED` | `NUMBER_ORDER_STATE_UNSPECIFIED`
+`CREATED` → `IN_REVIEW` → `COMPLETED` | `REJECTED` | `EXPIRED` | `BLOCKED` | `NUMBER_ORDER_STATE_UNSPECIFIED` *(Summary only — confirm exact names/encoding/enums against the authoritative [Number Order API Reference](https://developers.sinch.com/docs/numbers/api-reference/numbers/number-order.md) doc before implementing.)*
 
 ## Error Recovery
 

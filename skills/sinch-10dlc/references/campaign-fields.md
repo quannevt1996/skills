@@ -1,3 +1,8 @@
+> **Summary — not the spec.** This file orients you and links to the authoritative
+> `developers.sinch.com` doc; it may lag, omit fields, or simplify nesting. Do **not**
+> copy field names, nesting, encodings, or enums from here into shipped code without
+> confirming them in the linked doc. See "Source of Truth" in this skill's SKILL.md.
+
 # Campaign Registration Fields
 
 Full field reference for `POST /v1/projects/{projectId}/campaignRegistrations:submit`.
@@ -37,6 +42,8 @@ curl -X POST \
   }'
 ```
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Create a Campaign (API reference)](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration/campaignregistrationexternalservice_createtcrcampaign.md) doc before implementing.)*
+
 ## Required String Fields
 
 ### Identity
@@ -74,6 +81,8 @@ Separate string fields (not an array). Must be realistic and match the stated us
 - `optoutKeywords` — opt-out keywords, comma-separated, no spaces (e.g., `"STOP,QUIT,CANCEL"`, maxLength: 255). API defaults: `STOP, QUIT, END, CANCEL, UNSUBSCRIBE` — only specify if adding custom keywords
 - `helpKeywords` — help keywords, comma-separated, no spaces (e.g., `"HELP,INFO"`, maxLength: 255). API default: `HELP` — only specify if adding custom keywords
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Create a Campaign (API reference)](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration/campaignregistrationexternalservice_createtcrcampaign.md) doc before implementing.)*
+
 ## Required Boolean Flags
 
 All required. Defaults shown where applicable.
@@ -91,9 +100,11 @@ All required. Defaults shown where applicable.
 | `directLending` | `false` | Set `true` only if the sender is a financial institution doing first-party lending. |
 | `affiliateMarketing` | **none** | **Must be explicitly set.** Set `true` if messages promote third-party products/services. Set `false` if the brand only promotes its own. |
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Create a Campaign (API reference)](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration/campaignregistrationexternalservice_createtcrcampaign.md) doc before implementing.)*
+
 ## Optional Fields
 
-- `subUseCases` — required only for `MIXED` use case; select 2-5 from: `2FA`, `ACCOUNT_NOTIFICATION`, `CUSTOMER_CARE`, `DELIVERY_NOTIFICATION`, `FRAUD_ALERT`, `HIGHER_EDUCATION`, `MARKETING`, `POLLING_VOTING`, `PUBLIC_SERVICE_ANNOUNCEMENT`, `SECURITY_ALERT`
+- `subUseCases` — required only for `MIXED` use case; select 2-5 from: `2FA`, `ACCOUNT_NOTIFICATION`, `CUSTOMER_CARE`, `DELIVERY_NOTIFICATION`, `FRAUD_ALERT`, `HIGHER_EDUCATION`, `MARKETING`, `POLLING_VOTING`, `PUBLIC_SERVICE_ANNOUNCEMENT`, `SECURITY_ALERT` *(Summary only — confirm exact names/encoding/enums against the authoritative [Create a Campaign (API reference)](https://developers.sinch.com/docs/10dlc-registration/api-reference/10dlc-registration/10dlc-campaign-registration/campaignregistrationexternalservice_createtcrcampaign.md) doc before implementing.)*
 - `terms_and_conditions_link` — URL to terms and conditions page (maxLength: 255)
 - `privacy_policy_link` — URL to privacy policy page (maxLength: 255)
 - `attachments` — set to `true` to delay submission until documents are uploaded (default: `false`)

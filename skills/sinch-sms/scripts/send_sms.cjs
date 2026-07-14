@@ -1,4 +1,11 @@
 #!/usr/bin/env node
+/*
+ * EXECUTION TOOL — not a schema reference.
+ * Run this to PERFORM a task (e.g. create a webhook, send a test message) when you do not
+ * need to write application code. Do NOT copy its payload literals or logic into a new
+ * codebase as if they were the API spec — load the authoritative developers.sinch.com doc
+ * instead. See "Source of Truth" in this skill's SKILL.md.
+ */
 /**
  * Send an SMS via Sinch Conversation API.
  *
@@ -17,7 +24,7 @@
  *   SINCH_REGION       - API region: us, eu, or br (default: us)
  */
 
-var client = require("../common/sinch_client.cjs");
+var client = require("./common/sinch_client.cjs");
 
 function parseArgs(argv) {
   var args = { channel: "SMS" };

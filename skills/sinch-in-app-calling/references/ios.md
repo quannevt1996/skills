@@ -1,3 +1,8 @@
+> **Summary — not the spec.** This file orients you and links to the authoritative
+> `developers.sinch.com` doc; it may lag, omit fields, or simplify nesting. Do **not**
+> copy field names, nesting, encodings, or enums from here into shipped code without
+> confirming them in the linked doc. See "Source of Truth" in this skill's SKILL.md.
+
 <!-- Reference file for iOS SDK integration (Swift).
         Read only when the user's project targets iOS. -->
 # Sinch iOS Voice and Video SDK (Swift)
@@ -588,7 +593,7 @@ An incoming video call triggers `client(_:didReceiveIncomingCall:)` like a voice
 iOS **12.0** minimum deployment target.
 
 ### User ID restrictions
-User IDs must not be longer than 255 bytes and must only contain URL-safe characters: `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghjiklmnopqrstuvwxyz0123456789-_=`. Consider base64url-encoding IDs that contain other characters.
+User IDs must not be longer than 255 bytes and must only contain URL-safe characters: `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghjiklmnopqrstuvwxyz0123456789-_=`. Consider base64url-encoding IDs that contain other characters. *(Summary only — confirm exact names/encoding/enums against the authoritative [iOS auth doc](https://developers.sinch.com/docs/in-app-calling/ios/auth.md) doc before implementing.)*
 
 ### Call details
 The `SinchCallDetails` class holds metadata about a call including timestamps (`startedTime`, `progressedTime`, `rungTime`, `answeredTime`, `establishedTime`, `endedTime`), end cause (`.timeout`, `.denied`, `.noAnswer`, `.error`, `.hungUp`, `.canceled`, `.otherDeviceAnswered`, etc.), and error information.

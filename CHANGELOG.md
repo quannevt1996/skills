@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. Individual skills have their own versions in metadata.
 
+## 2026-07-13
+
+### Added
+
+- `sinch-sms` v1.0.0 — New skill for the SMS channel of the Conversation API (sender IDs, encoding, message parts, opt-out handling). Extracted from `sinch-conversation-api`; includes the `send_sms.cjs` script.
+- `sinch-mms` v1.0.0 — New skill for the MMS channel of the Conversation API (media types, size limits, transcoding). Extracted from `sinch-conversation-api`.
+- `sinch-rcs` v1.0.0 — New skill for the RCS channel of the Conversation API (rich cards, carousels, suggested actions, capability check, SMS fallback). Extracted from `sinch-conversation-api`; includes the RCS send scripts.
+- `sinch-whatsapp` v1.0.0 — New skill for the WhatsApp channel of the Conversation API (24-hour window, templates, opt-in rules, media specs). Extracted from `sinch-conversation-api`.
+
+### Changed
+
+- `sinch-conversation-api` v2.0.0 — Restructured to cover the API layer only (apps, contacts, conversations, message types, webhooks, templates, batch sending). Channel-specific references and send scripts moved to the new `sinch-sms`, `sinch-mms`, `sinch-rcs`, and `sinch-whatsapp` skills.
+
 ## 2026-04-20
 
 ### Changed

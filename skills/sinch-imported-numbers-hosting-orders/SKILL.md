@@ -3,7 +3,7 @@ name: sinch-imported-numbers-hosting-orders
 description: Import, host, qualify, and text-enable phone numbers for Sinch SMS using the Imported Numbers and Hosting Orders API. Use when importing non-Sinch numbers as DCA, creating hosting orders, qualifying numbers for text-enablement, managing LOA workflows, or checking hosting order status.
 metadata:
   author: Sinch
-  version: 1.0.4
+  version: 1.1.0
   category: Numbers
   tags: imported-numbers, hosting-orders, text-enablement, dca, loa
   uses:
@@ -50,8 +50,28 @@ User wants to work with imported numbers →
 2. **Qualification requires manual review.** After `addNumbers`, the user must email invoices to `orders@sinch.com`. Takes 1–3 business days.
 3. **Unlink before relinking.** To change service plan or campaign, first set both to empty string `""`, then set new values in a separate request.
 4. **Hosting orders are async.** Poll order status or set `callbackUrl` per-request.
-5. **List hosting orders requires all four params:** `states`, `type`, `servicePlanId`, `campaignId` are all required.
+5. **List hosting orders requires all four params:** `states`, `type`, `servicePlanId`, `campaignId` are all required. *(Summary only — confirm exact names/encoding/enums against the authoritative [List orders](https://developers.sinch.com/docs/numbers/api-reference/imported-hosting/hosting-orders/hostingorderservice_listhostingorders.md) doc before implementing.)*
 6. **`migrateToSinchTmo`** is read-only on responses. Exception: writable in `hostingOrders:importNumbers` requests.
+
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `developers.sinch.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `developers.sinch.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **Bundled `references/*.md` (NAVIGATIONAL SUMMARIES — not authoritative).** They orient
+   you and point at the right canonical doc; they may lag, omit fields, or simplify
+   nesting. Use them to decide what to build and which doc to open. Do NOT transcribe a
+   field name, nesting, encoding, or enum from a reference or from the SKILL.md overview
+   into shipped code without confirming it in the tier-1 doc. If a detail appears only in
+   a summary, treat it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
 
 ## Getting Started
 
@@ -104,9 +124,9 @@ curl -X POST \
 ## Key Concepts
 
 - **Imported Number** — Non-Sinch number enabled for SMS via Sinch as DCA. Linked to a service plan and optionally a 10DLC campaign.
-- **Qualified Number** — Number that passed eligibility review. States: `ELIGIBLE_CHECK_PENDING` → `ELIGIBLE` / `NOT_ELIGIBLE` → `VERIFICATION_PENDING` → `VERIFIED` / `VERIFICATION_FAILED` / `VERIFICATION_BLOCKED` → `HOSTING_IN_PROGRESS` → `HOSTING_DONE` / `HOSTING_FAILED`.
-- **Hosting Order** — Async provisioning tracker. States: `DRAFT` → `SUBMITTED` → `WAITING_FOR_LOA_SIGNATURE` → `IN_PROGRESS` → `COMPLETED` / `REJECTED`. Type: `IMPORT` or `TYPE_TEXT_ENABLE`.
-- **LOA** — Letter of Authorization for text-enablement. Three types: `directLoaInfo`, `resellerLoaInfo`, `blanketLoaInfo` (empty `{}`).
+- **Qualified Number** — Number that passed eligibility review. States: `ELIGIBLE_CHECK_PENDING` → `ELIGIBLE` / `NOT_ELIGIBLE` → `VERIFICATION_PENDING` → `VERIFIED` / `VERIFICATION_FAILED` / `VERIFICATION_BLOCKED` → `HOSTING_IN_PROGRESS` → `HOSTING_DONE` / `HOSTING_FAILED`. *(Summary only — confirm exact names/encoding/enums against the authoritative [Get qualified number](https://developers.sinch.com/docs/numbers/api-reference/imported-hosting/qualified-numbers/qualifiednumberservice_getqualifiednumber.md) doc before implementing.)*
+- **Hosting Order** — Async provisioning tracker. States: `DRAFT` → `SUBMITTED` → `WAITING_FOR_LOA_SIGNATURE` → `IN_PROGRESS` → `COMPLETED` / `REJECTED`. Type: `IMPORT` or `TYPE_TEXT_ENABLE`. *(Summary only — confirm exact names/encoding/enums against the authoritative [Get order](https://developers.sinch.com/docs/numbers/api-reference/imported-hosting/hosting-orders/hostingorderservice_gethostingorder.md) doc before implementing.)*
+- **LOA** — Letter of Authorization for text-enablement. Three types: `directLoaInfo`, `resellerLoaInfo`, `blanketLoaInfo` (empty `{}`). *(Summary only — confirm exact names/encoding/enums against the authoritative [Text-enable (qualified)](https://developers.sinch.com/docs/numbers/api-reference/imported-hosting/qualified-numbers/qualifiednumberservice_textenablenumbers.md) doc before implementing.)*
 - **Service Plan ID** — Links number to SMS service. **Campaign ID** — Links to 10DLC campaign (US A2P).
 - **OSR Update** — Carrier-level record update. Schedulable via `scheduledOsrUpdateTime`.
 
@@ -186,7 +206,7 @@ For **Toll-Free**, use `POST /qualifiedNumbers:textEnableTollFreeNumbers` or `PO
 
 ## Callbacks
 
-Callback URLs are set **per-request** via `callbackUrl` on import and text-enable operations (not project-level). Configure HMAC signing via `PATCH /callbackConfiguration` with `{"hmacSecret": "..."}` — verifies payloads via `X-Sinch-Signature` header.
+Callback URLs are set **per-request** via `callbackUrl` on import and text-enable operations (not project-level). Configure HMAC signing via `PATCH /callbackConfiguration` with `{"hmacSecret": "..."}` — verifies payloads via `X-Sinch-Signature` header. *(Summary only — confirm exact names/encoding/enums against the authoritative [API Reference](https://developers.sinch.com/docs/numbers/api-reference/imported-hosting.md) doc before implementing.)*
 
 See [references/callbacks.md](references/callbacks.md) for full payload schema, event types, and failure codes.
 

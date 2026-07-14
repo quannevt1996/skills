@@ -1,3 +1,8 @@
+> **Summary — not the spec.** This file orients you and links to the authoritative
+> `developers.sinch.com` doc; it may lag, omit fields, or simplify nesting. Do **not**
+> copy field names, nesting, encodings, or enums from here into shipped code without
+> confirming them in the linked doc. See "Source of Truth" in this skill's SKILL.md.
+
 # Voice API Callback Events
 
 ## Contents
@@ -24,12 +29,16 @@ All callback events include these base fields:
 | `custom` | string | Custom data passed with the call |
 | `applicationKey` | string | Your application key |
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [ICE Callback](https://developers.sinch.com/docs/voice/api-reference/voice/callbacks/ice) doc before implementing.)*
+
 Call-related events (ICE, ACE, DiCE) also include:
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `callResourceUrl` | string | URL to manage this call via REST |
 | `timestamp` | string | ISO 8601 timestamp |
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [ICE Callback](https://developers.sinch.com/docs/voice/api-reference/voice/callbacks/ice) doc before implementing.)*
 
 ---
 
@@ -49,6 +58,8 @@ Fired when a call reaches the Sinch platform. **Requires SVAML response.**
 | `rdnis` | string | Redirected Dialled Number Identification Service |
 | `callHeaders` | array | Headers from SDK client: `[{ "key": "k", "value": "v" }]` |
 | `userRate` | object | `{ "currencyId": "USD", "amount": 0.01 }` |
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [ICE Callback](https://developers.sinch.com/docs/voice/api-reference/voice/callbacks/ice) doc before implementing.)*
 
 ### Example Request
 
@@ -159,6 +170,8 @@ Fired when the call ends. **Fire-and-forget — no SVAML response.** Return `200
 | `from` | string | Caller info |
 | `callHeaders` | array | Headers from SDK client |
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [DiCE Callback](https://developers.sinch.com/docs/voice/api-reference/voice/callbacks/dice) doc before implementing.)*
+
 ### Disconnect Reasons
 
 | Reason | Description |
@@ -177,6 +190,8 @@ Fired when the call ends. **Fire-and-forget — no SVAML response.** Return `200
 | `CALLBACKERROR` | Callback URL error |
 | `USERNOTFOUND` | User not found |
 | `OTHERPEERANSWERED` | Another instance answered |
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [DiCE Callback](https://developers.sinch.com/docs/voice/api-reference/voice/callbacks/dice) doc before implementing.)*
 
 ### Example Request
 
@@ -216,6 +231,8 @@ Fired when a `runMenu` action collects input. **Requires SVAML response.**
 | `type` | string | `"return"`, `"sequence"`, `"timeout"`, `"hangup"`, `"invalidinput"`, `"error"` |
 | `value` | string | The collected value (e.g., `"support"` for `return(support)`, or DTMF digits for `sequence`) |
 | `inputMethod` | string | `"dtmf"` or `"voice"` |
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [PIE Callback](https://developers.sinch.com/docs/voice/api-reference/voice/callbacks/pie) doc before implementing.)*
 
 ### Example Request
 
@@ -288,6 +305,8 @@ When `amd: { enabled: true }` is set on `connectPstn`, the ACE event includes an
 | `amd.status` | string | `"human"`, `"machine"`, `"notsure"`, `"hangup"` |
 | `amd.reason` | string | `"longgreeting"`, `"initialsilence"`, etc. |
 | `amd.duration` | integer | Time taken for detection (ms) |
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [ACE Callback](https://developers.sinch.com/docs/voice/api-reference/voice/callbacks/ace) doc before implementing.)*
 
 For **async AMD** (`amd: { enabled: true, async: true }`), the initial ACE has `amd.status: "inprogress"`. The final result comes in a Notify event.
 

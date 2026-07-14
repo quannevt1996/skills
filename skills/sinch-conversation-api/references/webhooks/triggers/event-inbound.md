@@ -1,3 +1,8 @@
+> **Summary — not the spec.** This file orients you and links to the authoritative
+> `developers.sinch.com` doc; it may lag, omit fields, or simplify nesting. Do **not**
+> copy field names, nesting, encodings, or enums from here into shipped code without
+> confirming them in the linked doc. See "Source of Truth" in this skill's SKILL.md.
+
 # EVENT_INBOUND Trigger
 
 ← [Back to Conversation API SKILL.md](../../../SKILL.md)
@@ -28,6 +33,8 @@ The webhook callback contains an `event` object with these key fields:
 | `contact_message_event` | object    | Message-related event payload (for events about messages) |
 | `accept_time`           | timestamp | When Sinch received the event                             |
 | `channel_identity`      | object    | Channel-specific sender information                       |
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Callbacks & Webhooks](https://developers.sinch.com/docs/conversation/callbacks.md) doc before implementing.)*
 
 ### Event Types
 
@@ -70,6 +77,8 @@ The webhook callback contains an `event` object with these key fields:
   }
 }
 ```
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Callbacks & Webhooks](https://developers.sinch.com/docs/conversation/callbacks.md) doc before implementing.)*
 
 ## Common Use Cases
 

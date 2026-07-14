@@ -3,7 +3,7 @@ name: sinch-mailgun
 description: Sends, receives, and tracks email via the Mailgun (Sinch) API. Use when the user wants to send email, manage domains, configure webhooks, query email events/logs, manage templates, handle suppressions (bounces, unsubscribes, complaints), set up inbound routes, manage mailing lists, DKIM keys, or IP warmup using Mailgun.
 metadata:
   author: Sinch
-  version: 1.0.4
+  version: 1.1.0
   category: Email
   tags: email, mailgun, smtp, webhooks, templates, domains, suppressions
   uses:
@@ -35,6 +35,26 @@ When the user chooses **direct API calls**, refer to the API references linked i
 
 **Security**: See the Security section below for url fetching policy, handling inbound webhook content, and credential handling.
 
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `documentation.mailgun.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `documentation.mailgun.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **Bundled `references/*.md` (NAVIGATIONAL SUMMARIES — not authoritative).** They orient
+   you and point at the right canonical doc; they may lag, omit fields, or simplify
+   nesting. Use them to decide what to build and which doc to open. Do NOT transcribe a
+   field name, nesting, encoding, or enum from a reference or from the SKILL.md overview
+   into shipped code without confirming it in the tier-1 doc. If a detail appears only in
+   a summary, treat it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
+
 ## Getting Started
 
 ### Agent Credentials handling
@@ -53,6 +73,8 @@ Ensure that authentication headers are properly set when making API calls. Mailg
 ```bash
 --user "api:$MAILGUN_API_KEY"
 ```
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Auth docs](https://documentation.mailgun.com/docs/mailgun/api-reference/mg-auth.md) doc before implementing.)*
 
 See [sinch-authentication](../sinch-authentication/SKILL.md) for full auth setup. Find your key at Mailgun Dashboard > Account Settings > API Keys.
 
@@ -149,7 +171,7 @@ Real-time HTTP POST notifications for email events.
 - **Domain** — `/v3/domains/{domain}/webhooks` (v3) or `/v4/domains/{domain}/webhooks` (v4). See [Domain Webhooks API](https://documentation.mailgun.com/docs/mailgun/api-reference/send/mailgun/domain-webhooks/get-v3-domains--domain--webhooks.md)
 - **Account** — `/v1/webhooks` (fires across all domains). See [Account Webhooks API](https://documentation.mailgun.com/docs/mailgun/api-reference/send/mailgun/account-webhooks/get-v1-webhooks.md)
 
-Event types: `clicked`, `complained`, `delivered`, `failed`, `opened`, `permanent_fail`, `temporary_fail`, `unsubscribed`
+Event types: `clicked`, `complained`, `delivered`, `failed`, `opened`, `permanent_fail`, `temporary_fail`, `unsubscribed` *(Summary only — confirm exact names/encoding/enums against the authoritative [Domain Webhooks API](https://documentation.mailgun.com/docs/mailgun/api-reference/send/mailgun/domain-webhooks/get-v3-domains--domain--webhooks.md) doc before implementing.)*
 
 ### Events and Analytics
 
@@ -191,8 +213,8 @@ Add `recipient-variables` as JSON mapping each recipient address to their variab
 
 ### Set up domain webhooks
 
-1. Create webhook via `POST /v3/domains/{domain}/webhooks` with `id` (event type) and `url` fields
-2. Verify HMAC signature on incoming webhooks using your webhook signing key (SHA256). See [Securing Webhooks](https://documentation.mailgun.com/docs/mailgun/user-manual/webhooks/securing-webhooks.md)
+1. Create webhook via `POST /v3/domains/{domain}/webhooks` with `id` (event type) and `url` fields *(Summary only — confirm exact names/encoding/enums against the authoritative [Domain Webhooks API](https://documentation.mailgun.com/docs/mailgun/api-reference/send/mailgun/domain-webhooks/get-v3-domains--domain--webhooks.md) doc before implementing.)*
+2. Verify HMAC signature on incoming webhooks using your webhook signing key (SHA256). See [Securing Webhooks](https://documentation.mailgun.com/docs/mailgun/user-manual/webhooks/securing-webhooks.md) *(Summary only — confirm exact names/encoding/enums against the authoritative [Securing Webhooks](https://documentation.mailgun.com/docs/mailgun/user-manual/webhooks/securing-webhooks.md) doc before implementing.)*
 3. Return 2xx or Mailgun retries with exponential backoff for ~8 hours
 
 ### Schedule and cancel delivery
@@ -215,7 +237,7 @@ Add `recipient-variables` as JSON mapping each recipient address to their variab
 - **Events/Stats deprecated** — use `POST /v1/analytics/logs` (not `GET /v3/{domain}/events`) and `POST /v1/analytics/metrics` (not `/v3/stats`).
 - **Tags deprecated** — use `/v1/analytics/tags` (not `/v3/{domain}/tags`).
 - **Suppression auto-populate** — Mailgun silently drops messages to bounced/unsubscribed/complained addresses.
-- **Rate limits** — `429` response. Check `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` headers. Use exponential backoff.
+- **Rate limits** — `429` response. Check `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` headers. Use exponential backoff. *(Summary only — confirm exact names/encoding/enums against the authoritative [API Overview](https://documentation.mailgun.com/docs/mailgun/api-reference/api-overview.md) doc before implementing.)*
 - **Send options 16KB cap** — `o:`, `h:`, `v:`, `t:` params combined max 16KB per request.
 - **Webhook caching** — changes take up to 10 minutes. URLs are deduplicated across account and domain levels.
 - **IP warmup** — new dedicated IPs need gradual volume ramp. Use `/v3/ip_warmups` to manage programmatically.

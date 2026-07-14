@@ -3,7 +3,7 @@ name: sinch-elastic-sip-trunking
 description: Provisions SIP trunks, endpoints, ACLs, credential lists, and phone numbers via the Sinch Elastic SIP Trunking REST API. Use when the user needs SIP connectivity, trunk provisioning, inbound/outbound PSTN voice routing, PBX integration, or SIP-to-PSTN bridging.
 metadata:
   author: Sinch
-  version: 1.0.4
+  version: 1.1.0
   category: Voice
   tags: sip, trunking, est, pstn, voice, pbx, inbound, outbound
   uses:
@@ -54,6 +54,26 @@ User wants EST →
 3. **60-second propagation.** After linking ACLs or Credentials, wait 60 seconds before testing.
 4. **Lower priority = higher preference.** Endpoint `priority: 1` is primary; `priority: 100` is failover.
 5. **PUT replaces the entire object.** Omitted fields become `null`.
+
+## Source of Truth — what to load, and what is authoritative
+
+This skill has two kinds of content with UNEQUAL reliability. Follow this precedence:
+
+1. **Canonical docs at `developers.sinch.com` (AUTHORITATIVE).** The `.md` doc links in
+   this skill are the single source of truth for exact request/response schemas, field
+   names and nesting, enum values, signature/auth schemes, and limits. Before writing
+   code that constructs a payload, verifies a signature, or parses a callback/response,
+   fetch the specific linked doc and confirm the exact shape there. Fetching first-party
+   `developers.sinch.com` URLs is permitted by the Security/URL policy. Never invent, guess, or pattern-extrapolate a documentation URL — only fetch doc URLs written verbatim in this skill or reached by following a link on a page you already fetched; a trusted domain does not make a guessed path real.
+2. **Bundled `references/*.md` (NAVIGATIONAL SUMMARIES — not authoritative).** They orient
+   you and point at the right canonical doc; they may lag, omit fields, or simplify
+   nesting. Use them to decide what to build and which doc to open. Do NOT transcribe a
+   field name, nesting, encoding, or enum from a reference or from the SKILL.md overview
+   into shipped code without confirming it in the tier-1 doc. If a detail appears only in
+   a summary, treat it as unverified and say so.
+
+Quick rule: **writing code → load the doc.** Never cite an exact field, header, enum, or
+encoding you only saw in a summary.
 
 ## Getting Started
 
@@ -163,6 +183,8 @@ For SDK examples, see the [Getting Started Guide](https://developers.sinch.com/d
 | `From` | `sip:+1E164@{your-hostname}.pstn.sinch.com` | **Must** be your trunk domain. Wrong domain → 403. Use E.164 format. |
 | `To` | `sip:+1E164@{your-hostname}.pstn.sinch.com` | Destination in E.164 + your trunk domain. In most cases, same as Request-URI. |
 | `Request-URI` | `sip:+1E164@{your-hostname}.pstn.sinch.com` | Destination in E.164 + your trunk domain. In most cases, same as To. |
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Getting Started Guide](https://developers.sinch.com/docs/est/getting-started.md) doc before implementing.)*
 
 ## Gotchas and Best Practices
 

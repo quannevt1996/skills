@@ -1,10 +1,17 @@
 #!/usr/bin/env node
+/*
+ * EXECUTION TOOL — not a schema reference.
+ * Run this to PERFORM a task (e.g. create a webhook, send a test message) when you do not
+ * need to write application code. Do NOT copy its payload literals or logic into a new
+ * codebase as if they were the API spec — load the authoritative developers.sinch.com doc
+ * instead. See "Source of Truth" in this skill's SKILL.md.
+ */
 /**
- * Send an RCS card message via Sinch Conversation API.
+ * Send an RCS location message via Sinch Conversation API.
  *
  * Usage:
- *   node send_card.cjs --to +15551234567 --title "Sale" --description "50% off" --image-url "https://..." --choices "Shop Now,Learn More"
- *   node send_card.cjs --to +15551234567 --title "Product" --description "Amazing features" --image-url "https://..." --fallback-sms
+ *   node send_location.cjs --to +15551234567 --lat 37.7749 --lon -122.4194 --title "Our Office" --label "Visit us here"
+ *   node send_location.cjs --to +15551234567 --lat 40.7128 --lon -74.0060
  *
  * Environment variables (required):
  *   SINCH_PROJECT_ID   - Sinch project ID
@@ -16,7 +23,7 @@
  *   SINCH_REGION       - API region: us, eu, or br (default: us)
  */
 
-var client = require("../common/sinch_client.cjs");
+var client = require("./common/sinch_client.cjs");
 
 function parseArgs(argv) {
   var args = { fallbackSms: false };
@@ -25,17 +32,17 @@ function parseArgs(argv) {
       case "--to":
         args.to = argv[++i];
         break;
+      case "--lat":
+        args.lat = parseFloat(argv[++i]);
+        break;
+      case "--lon":
+        args.lon = parseFloat(argv[++i]);
+        break;
       case "--title":
         args.title = argv[++i];
         break;
-      case "--description":
-        args.description = argv[++i];
-        break;
-      case "--image-url":
-        args.imageUrl = argv[++i];
-        break;
-      case "--choices":
-        args.choices = argv[++i].split(",");
+      case "--label":
+        args.label = argv[++i];
         break;
       case "--fallback-sms":
         args.fallbackSms = true;
@@ -45,46 +52,47 @@ function parseArgs(argv) {
         break;
       case "--help":
         console.log(
-          'Usage: node send_card.cjs --to PHONE --title TEXT --description TEXT --image-url URL [--choices "Choice1,Choice2"] [--fallback-sms] [--sender NUMBER]',
+          "Usage: node send_location.cjs --to PHONE --lat LATITUDE --lon LONGITUDE [--title TEXT] [--label TEXT] [--fallback-sms] [--sender NUMBER]",
         );
         process.exit(0);
     }
   }
-  if (!args.to || !args.title || !args.description || !args.imageUrl) {
+  if (!args.to || isNaN(args.lat) || isNaN(args.lon)) {
+    console.error("Error: --to, --lat, and --lon are required");
     console.error(
-      "Error: --to, --title, --description, and --image-url are required",
-    );
-    console.error(
-      'Usage: node send_card.cjs --to PHONE --title TEXT --description TEXT --image-url URL [--choices "Choice1,Choice2"]',
+      "Usage: node send_location.cjs --to PHONE --lat LATITUDE --lon LONGITUDE",
     );
     process.exit(1);
   }
   return args;
 }
 
-function sendRcsCard(
+function sendRcsLocation(
   projectId,
   token,
   appId,
   to,
+  lat,
+  lon,
   title,
-  description,
-  imageUrl,
-  choices,
+  label,
   region,
   fallbackSms,
   sender,
 ) {
   var url = client.apiUrl(region, projectId, "messages:send");
 
-  var choicesArray = [];
-  if (choices && choices.length > 0) {
-    choicesArray = choices.map(function (choice) {
-      return {
-        text_message: { text: choice },
-        postback_data: choice.toLowerCase().replace(/ /g, "_"),
-      };
-    });
+  var locationMsg = {
+    coordinates: {
+      latitude: lat,
+      longitude: lon,
+    },
+  };
+  if (title) {
+    locationMsg.title = title;
+  }
+  if (label) {
+    locationMsg.label = label;
   }
 
   var body = {
@@ -95,12 +103,7 @@ function sendRcsCard(
       },
     },
     message: {
-      card_message: {
-        title: title,
-        description: description,
-        media_message: { url: imageUrl },
-        choices: choicesArray,
-      },
+      location_message: locationMsg,
     },
   };
 
@@ -141,16 +144,16 @@ async function main() {
   process.stderr.write("Authenticating...\n");
   var token = await client.getAccessToken(keyId, keySecret);
 
-  process.stderr.write("Sending RCS card message to " + args.to + "...\n");
-  var result = await sendRcsCard(
+  process.stderr.write("Sending RCS location message to " + args.to + "...\n");
+  var result = await sendRcsLocation(
     projectId,
     token,
     appId,
     args.to,
+    args.lat,
+    args.lon,
     args.title,
-    args.description,
-    args.imageUrl,
-    args.choices,
+    args.label,
     region,
     args.fallbackSms,
     args.sender,

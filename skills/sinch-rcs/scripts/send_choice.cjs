@@ -1,10 +1,18 @@
 #!/usr/bin/env node
+/*
+ * EXECUTION TOOL — not a schema reference.
+ * Run this to PERFORM a task (e.g. create a webhook, send a test message) when you do not
+ * need to write application code. Do NOT copy its payload literals or logic into a new
+ * codebase as if they were the API spec — load the authoritative developers.sinch.com doc
+ * instead. See "Source of Truth" in this skill's SKILL.md.
+ */
 /**
  * Send an RCS choice message with interactive buttons via Sinch Conversation API.
  *
  * Usage:
  *   node send_choice.cjs --to +15551234567 --message "Choose an option:" --choices "Yes,No,Maybe"
  *   node send_choice.cjs --to +15551234567 --message "What's next?" --choices "Call Us|tel:+15551234567,Visit|https://example.com"
+ *   node send_choice.cjs --to +15551234567 --message "Share your location:" --choices "Share location|loc:https://maps.google.com"
  *
  * Environment variables (required):
  *   SINCH_PROJECT_ID   - Sinch project ID
@@ -16,7 +24,7 @@
  *   SINCH_REGION       - API region: us, eu, or br (default: us)
  */
 
-var client = require("../common/sinch_client.cjs");
+var client = require("./common/sinch_client.cjs");
 
 function parseArgs(argv) {
   var args = { fallbackSms: false };
@@ -42,7 +50,7 @@ function parseArgs(argv) {
           'Usage: node send_choice.cjs --to PHONE --message TEXT --choices "Choice1,Choice2"',
         );
         console.log(
-          'For URL/Call actions: --choices "Call|tel:+15551234567,Visit|https://example.com"',
+          'For URL/Call/Location actions: --choices "Call|tel:+15551234567,Visit|https://example.com,Share|loc:https://maps.google.com"',
         );
         process.exit(0);
     }
@@ -76,16 +84,21 @@ function sendRcsChoice(
     var action = parts[1];
 
     var choiceMsg = {
-      text_message: { text: text },
       postback_data: text.toLowerCase().replace(/ /g, "_"),
     };
 
     if (action) {
       if (action.startsWith("http://") || action.startsWith("https://")) {
-        choiceMsg.url_message = { url: action };
+        choiceMsg.url_message = { title: text, url: action };
       } else if (action.startsWith("tel:")) {
-        choiceMsg.call_message = { phone_number: action.replace("tel:", "") };
+        choiceMsg.call_message = { title: text, phone_number: action.replace("tel:", "") };
+      } else if (action.startsWith("loc:")) {
+        choiceMsg.share_location_message = { title: text, fallback_url: action.replace("loc:", "") };
+      } else {
+        choiceMsg.text_message = { text: text };
       }
+    } else {
+      choiceMsg.text_message = { text: text };
     }
 
     return choiceMsg;

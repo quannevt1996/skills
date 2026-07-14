@@ -1,3 +1,8 @@
+> **Summary — not the spec.** This file orients you and links to the authoritative
+> `developers.sinch.com` doc; it may lag, omit fields, or simplify nesting. Do **not**
+> copy field names, nesting, encodings, or enums from here into shipped code without
+> confirming them in the linked doc. See "Source of Truth" in this skill's SKILL.md.
+
 # CAPABILITY Trigger
 
 ← [Back to Conversation API SKILL.md](../../../SKILL.md)
@@ -27,6 +32,8 @@ The webhook callback contains a `capability_notification` object with these key 
 | `capability_status`            | string | Result of the capability check                         |
 | `channel_recipient_identities` | array  | Available recipient identities for the channel         |
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Callbacks & Webhooks](https://developers.sinch.com/docs/conversation/callbacks.md) doc before implementing.)*
+
 ### Capability Status Values
 
 | Status               | Description                                      |
@@ -35,6 +42,8 @@ The webhook callback contains a `capability_notification` object with these key 
 | `CAPABILITY_PARTIAL` | Contact has limited capability on the channel    |
 | `NO_CAPABILITY`      | Contact does not support the channel             |
 | `CAPABILITY_UNKNOWN` | Unable to determine capability (transient error) |
+
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Callbacks & Webhooks](https://developers.sinch.com/docs/conversation/callbacks.md) doc before implementing.)*
 
 ### Channel Recipient Identities
 

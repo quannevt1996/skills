@@ -1,3 +1,8 @@
+> **Summary — not the spec.** This file orients you and links to the authoritative
+> `developers.sinch.com` doc; it may lag, omit fields, or simplify nesting. Do **not**
+> copy field names, nesting, encodings, or enums from here into shipped code without
+> confirming them in the linked doc. See "Source of Truth" in this skill's SKILL.md.
+
 ← [Back to Conversation API SKILL.md](../SKILL.md)
 
 # Template Management API Reference
@@ -78,13 +83,15 @@ All endpoints prefixed with `/v2/projects/{project_id}`.
 }
 ```
 
+*(Summary only — confirm exact names/encoding/enums against the authoritative [Templates V2 API](https://developers.sinch.com/docs/conversation/api-reference/template/templates-v2.md) doc before implementing.)*
+
 ## Creating Templates
 
 `POST /v2/projects/{project_id}/templates` — see [Templates V2 API](https://developers.sinch.com/docs/conversation/api-reference/template/templates-v2.md) for full request/response details.
 
 Key patterns:
 - **Simple text**: Set `text_message` in a translation with `${variable}` placeholders
-- **WhatsApp override**: Add `channel_template_overrides.WHATSAPP.template_reference` pointing to an approved Meta template, with `parameter_mappings` linking channel-specific keys to omni-channel variable keys. On WhatsApp: uses the approved channel-specific template. On all other channels: uses the generic message.
+- **WhatsApp override**: Add `channel_template_overrides.WHATSAPP.template_reference` pointing to an approved Meta template, with `parameter_mappings` linking channel-specific keys to omni-channel variable keys. On WhatsApp: uses the approved channel-specific template. On all other channels: uses the generic message. *(Summary only — confirm exact names/encoding/enums against the authoritative [Templates V2 API](https://developers.sinch.com/docs/conversation/api-reference/template/templates-v2.md) doc before implementing.)*
 - **Multi-language**: Add multiple translations with different `language_code` values
 
 ## Updating Templates
@@ -93,7 +100,7 @@ Key patterns:
 
 ## Translation Message Types
 
-Each translation supports one of: `text_message`, `card_message`, `carousel_message`, `choice_message`, `location_message`, `media_message`, `template_message`, `list_message`.
+Each translation supports one of: `text_message`, `card_message`, `carousel_message`, `choice_message`, `location_message`, `media_message`, `template_message`, `list_message`. *(Summary only — confirm exact names/encoding/enums against the authoritative [Templates V2 API](https://developers.sinch.com/docs/conversation/api-reference/template/templates-v2.md) doc before implementing.)*
 
 Plus: `channel_template_overrides`, `variables`, `language_code`, `version`.
 
