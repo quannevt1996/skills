@@ -24,7 +24,7 @@ These skills can also be installed via the [Sinch Plugins](https://github.com/si
 | `sinch-provisioning-api` | 1.1.0 | Messaging | Provision WhatsApp senders, RCS agents, templates, and webhooks |
 | `sinch-voice-api` | 1.2.0 | Voice | Make, receive, and control voice calls (SVAML, IVR, TTS, conferencing) |
 | `sinch-in-app-calling` | 1.1.0 | Voice & Video | In-app voice and video SDK |
-| `sinch-elastic-sip-trunking` | 1.1.0 | Voice | SIP trunk and number management |
+| `sinch-elastic-sip-trunking` | 1.1.1 | Voice | SIP trunk and number management |
 | `sinch-mailgun` | 1.1.0 | Email | Mailgun Email API — sending, receiving, tracking |
 | `sinch-mailgun-inspect` | 1.1.0 | Email | Email preview and rendering |
 | `sinch-mailgun-optimize` | 1.1.0 | Email | Email deliverability optimization |
@@ -37,6 +37,10 @@ These skills can also be installed via the [Sinch Plugins](https://github.com/si
 | `sinch-verification-api` | 1.1.0 | Verification | Phone number verification (SMS, Voice, Flashcall, WhatsApp) |
 | `sinch-number-lookup-api` | 1.1.0 | Numbers | Phone number lookup and validation |
 | `sinch-fax-api` | 1.1.0 | Voice | Send and receive faxes |
+| `sinch-cli` | 1.0.0 | Functions | Terminal commands for the Sinch CLI (`@sinch/cli`) — Functions, Voice, Numbers, Conversation, Fax, SIP, secrets |
+| `sinch-functions` | 1.0.0 | Functions | Sinch Functions platform overview — beta serverless runtime for voice, SMS, and conversation apps |
+| `sinch-functions-node` | 1.0.0 | Functions | Write Node.js/TypeScript Sinch Functions (`@sinch/functions-runtime`) — voice handlers, SVAML builders, Conversation webhooks |
+| `sinch-functions-dotnet` | 1.0.0 | Functions | Write C#/.NET Sinch Functions (`Sinch.Functions.Runtime`) — controllers, SVAML builders, DI, ASP.NET conventions |
 
 ## Skill Structure
 

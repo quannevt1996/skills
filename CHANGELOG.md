@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. Individual skills have their own versions in metadata.
 
+## 2026-09-05
+
+### Fixed
+
+- `sinch-elastic-sip-trunking` v1.1.1 — Corrected four API details that were wrong or missing, all verified against the live EST API:
+  - Create-trunk response field is `id`, not `sipTrunkId`; documented the returned `domain` and the `id`/`sipTrunkId` naming difference between the trunk response and the endpoint request body
+  - ACL `ipRanges` take `{ipAddress, range}` objects with an integer prefix length, not CIDR strings; `enabled` is required
+  - Replaced `GET /trunks/{trunkId}/phoneNumbers` (returns 404 — endpoint does not exist) with `GET /projects/{projectId}/phoneNumbers` in Workflows B/C/D and the diagnostics checklist
+  - Workflow D was missing the step linking the credential list to the trunk; without it the registered endpoint is still created with `201` and every REGISTER then fails with `401`. Added the step, the verification, and a matching 401 troubleshooting entry. Also documented the credential password policy.
+
+## 2026-09-03
+
+### Added
+
+- `sinch-cli` v1.0.0 — New skill covering the full Sinch CLI (`@sinch/cli`, binary `sinch`): auth, config profiles, `functions` lifecycle (`init`/`dev`/`deploy`/`logs`/`status`/`db`/`storage`), `voice`, `numbers`, `porting`, `conversation`, `fax`, `sip`, `secrets`, `templates`, and shell completions. Ships with reference files for voice, numbers-and-porting, and conversation-fax-sip.
+- `sinch-functions` v1.0.0 — New skill for the Sinch Functions serverless platform (beta): runtime choice (Node.js vs C#), install/auth, `FunctionContext` overview, voice callback lifecycle (ICE/ACE/PIE/DICE), SVAML basics, and cross-links to the runtime-specific skills.
+- `sinch-functions-node` v1.0.0 — New skill for the Node.js/TypeScript runtime (`@sinch/functions-runtime`): `VoiceFunction` default export, `IceSvamlBuilder`/`AceSvamlBuilder`/`PieSvamlBuilder`, `MenuTemplates`/`createMenu`, `ConversationController`, custom HTTP endpoints, Basic Auth via `export const auth`, and `setup()` hooks. Ships with reference files for context services, SVAML builders, and conversation webhooks.
+- `sinch-functions-dotnet` v1.0.0 — New skill for the C#/.NET runtime (`Sinch.Functions.Runtime`, `.NET 10`): `SinchVoiceController`/`SinchConversationController`/`SinchController`/`ElevenLabsController`, `Instructions.* → Action.* → Build()` builder chain, `ISinchFunctionInit` DI, and `[Authorize]` protection. Ships with reference files for context services, SVAML builders, and conversation webhooks.
+
 ## 2026-07-13
 
 ### Added

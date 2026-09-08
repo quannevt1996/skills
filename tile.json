@@ -45,6 +45,14 @@
     "sinch-number-lookup-api": {
       "path": "skills/sinch-number-lookup-api/SKILL.md"
     },
-    "sinch-fax-api": { "path": "skills/sinch-fax-api/SKILL.md" }
+    "sinch-fax-api": { "path": "skills/sinch-fax-api/SKILL.md" },
+    "sinch-cli": { "path": "skills/sinch-cli/SKILL.md" },
+    "sinch-functions": { "path": "skills/sinch-functions/SKILL.md" },
+    "sinch-functions-node": {
+      "path": "skills/sinch-functions-node/SKILL.md"
+    },
+    "sinch-functions-dotnet": {
+      "path": "skills/sinch-functions-dotnet/SKILL.md"
+    }
   }
 }

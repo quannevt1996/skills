@@ -11,6 +11,7 @@ If calls or registrations fail, check the SIP response code:
 
 | Code | Symptom | Likely Cause | Fix |
 |------|---------|--------------|-----|
+| **401** | Registration fails | Credential list not linked to trunk | **Check this first.** `GET /trunks/{trunkId}/credentialLists` — if empty, link it: `POST /trunks/{trunkId}/credentialLists`. Endpoint creation succeeds without the link, so provisioning looks healthy while every REGISTER fails. |
 | **401** | Registration fails | Credential mismatch | Verify username/password in Credential List matches what the SIP UA is sending. |
 | **403** | Outbound call fails | Source IP not in ACL | Add your public IP to the ACL linked to the trunk. Check with `curl ifconfig.me`. |
 | **403** | Outbound call fails | Wrong `From` domain | Ensure `From` header uses YOUR trunk domain (`user@{hostname}.pstn.sinch.com`), not the destination's domain. |
@@ -26,7 +27,7 @@ After setting up a trunk, verify the configuration:
 1. **Check trunk exists**: `GET /trunks` — confirm your trunk appears in the list
 2. **Check outbound auth is linked** (outbound): `GET /trunks/{trunkId}/accessControlLists` for ACL-based auth, or `GET /trunks/{trunkId}/credentialLists` for digest auth — confirm your ACL or credential list ID appears
 3. **Check endpoint exists** (inbound): `GET /trunks/{trunkId}/endpoints` — confirm endpoint with correct IP/port
-4. **Check phone numbers assigned** (inbound): `GET /trunks/{trunkId}/phoneNumbers` — confirm numbers are listed
+4. **Check phone numbers assigned** (inbound): `GET /projects/{projectId}/phoneNumbers` — confirm numbers are listed
 5. **Wait 60 seconds** after any config change before testing
 6. **Test outbound**: Send a SIP INVITE to `+1XXXXXXXXXX@{hostname}.pstn.sinch.com`
 7. **Test inbound**: Call one of the assigned phone numbers and verify your endpoint receives the INVITE
@@ -40,7 +41,7 @@ After setting up a trunk, verify the configuration:
 4. Check the SIP `From` header uses your trunk domain, not the callee's domain
 
 ### "My SIP UA can't register"
-1. Verify a Credential List is linked to the trunk
+1. Verify a Credential List is **linked to the trunk** — `GET /trunks/{trunkId}/credentialLists` must be non-empty. Creating the endpoint does not link it for you.
 2. Confirm a **Registered Endpoint** (not Static) exists on the trunk
 3. Verify the username/password in the Credential List matches the UA config
 4. Ensure the UA is sending REGISTER to `{hostname}.pstn.sinch.com`
