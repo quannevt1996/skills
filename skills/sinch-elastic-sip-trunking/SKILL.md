@@ -3,7 +3,7 @@ name: sinch-elastic-sip-trunking
 description: Provisions SIP trunks, endpoints, ACLs, credential lists, and phone numbers via the Sinch Elastic SIP Trunking REST API. Use when the user needs SIP connectivity, trunk provisioning, inbound/outbound PSTN voice routing, PBX integration, or SIP-to-PSTN bridging.
 metadata:
   author: Sinch
-  version: 1.1.0
+  version: 1.1.1
   category: Voice
   tags: sip, trunking, est, pstn, voice, pbx, inbound, outbound
   uses:
@@ -112,14 +112,25 @@ curl -X POST \
   -d '{"name": "my-trunk", "hostName": "my-trunk"}'
 ```
 
-Response includes `sipTrunkId` and `hostName` — use `{hostName}.pstn.sinch.com` for all SIP routing.
+Response includes the trunk **`id`** (not `sipTrunkId`), plus `hostName` and a ready-made `domain`:
+
+```json
+{ "id": "01GNZ9MXEZ4K6S8GB7RW063VAN",
+  "hostName": "my-trunk",
+  "domain": "my-trunk.pstn.sinch.com",
+  "enabled": true }
+```
+
+Use `domain` (or `{hostName}.pstn.sinch.com`) for all SIP routing. Save the `id` — every trunk-scoped call needs it.
+
+> **Field-name trap:** the trunk's identifier is `id` in this response, but the same value is called `sipTrunkId` in the **endpoint** create request body.
 
 For SDK examples, see the [Getting Started Guide](https://developers.sinch.com/docs/est/getting-started.md).
 ## Key Concepts
 
 - **Trunk**: Connection between your infrastructure and Sinch. Has a `hostName` used in SIP routing.
 - **SIP Endpoint**: Where inbound calls go. **Static** (fixed IP) or **Registered** (dynamic, requires Credential List).
-- **ACL**: Authorizes outbound by source IP (CIDR notation, e.g. `203.0.113.10/32`).
+- **ACL**: Authorizes outbound by source IP. Each entry is an **object** — `ipAddress` plus an integer `range` (1-32) — *not* a CIDR string.
 - **Credential List**: Username/password pairs. Used for registered endpoint auth (inbound) or digest auth (outbound).
 - **Phone Numbers**: E.164 DIDs assigned to a trunk for inbound routing.
 
@@ -140,7 +151,7 @@ For SDK examples, see the [Getting Started Guide](https://developers.sinch.com/d
 - [ ] 1. Create trunk
 - [ ] 2. Create static SIP endpoint on trunk
 - [ ] 3. Assign phone number(s) to trunk
-- [ ] 4. Verify: `GET /trunks/{trunkId}/endpoints` and `GET /trunks/{trunkId}/phoneNumbers`
+- [ ] 4. Verify: `GET /trunks/{trunkId}/endpoints` and `GET /projects/{projectId}/phoneNumbers`
 
 **API docs**: [Create trunk](https://developers.sinch.com/docs/est/api-reference/est/sip-trunks/createsiptrunk.md) → [Create SIP endpoint](https://developers.sinch.com/docs/est/api-reference/est/sip-endpoints/createsipendpoint.md) → [Get phone numbers](https://developers.sinch.com/docs/est/api-reference/est/phone-numbers/getphonenumbers.md)
 
@@ -151,7 +162,7 @@ For SDK examples, see the [Getting Started Guide](https://developers.sinch.com/d
 - [ ] 3. Create SIP endpoint on trunk
 - [ ] 4. Assign phone numbers to trunk
 - [ ] 5. **Wait 60 seconds** before testing
-- [ ] 6. Verify: `GET /trunks/{trunkId}/accessControlLists`, `GET /trunks/{trunkId}/endpoints`, `GET /trunks/{trunkId}/phoneNumbers`
+- [ ] 6. Verify: `GET /trunks/{trunkId}/accessControlLists`, `GET /trunks/{trunkId}/endpoints`, `GET /projects/{projectId}/phoneNumbers`
 
 **API docs**: [Create trunk](https://developers.sinch.com/docs/est/api-reference/est/sip-trunks/createsiptrunk.md) → [Create ACL](https://developers.sinch.com/docs/est/api-reference/est/access-control-list/createaccesscontrollist.md) → [Link ACL to trunk](https://developers.sinch.com/docs/est/api-reference/est/sip-trunks/addaccesscontrollisttotrunk.md) → [Create SIP endpoint](https://developers.sinch.com/docs/est/api-reference/est/sip-endpoints/createsipendpoint.md) → [Get phone numbers](https://developers.sinch.com/docs/est/api-reference/est/phone-numbers/getphonenumbers.md)
 
@@ -159,10 +170,15 @@ For SDK examples, see the [Getting Started Guide](https://developers.sinch.com/d
 
 - [ ] 1. Create trunk
 - [ ] 2. Create credential list with username/password
-- [ ] 3. Create registered endpoint on trunk (references a username from the credential list)
-- [ ] 4. Assign phone number(s) to trunk
-- [ ] 5. Configure SIP UA to REGISTER to `{hostname}.pstn.sinch.com`
-- [ ] 6. Verify: `GET /trunks/{trunkId}/endpoints` and `GET /trunks/{trunkId}/phoneNumbers`
+- [ ] 3. **Link credential list to trunk** — `POST /trunks/{trunkId}/credentialLists`
+- [ ] 4. Create registered endpoint on trunk (references a username from the credential list)
+- [ ] 5. Assign phone number(s) to trunk
+- [ ] 6. Configure SIP UA to REGISTER to `{hostname}.pstn.sinch.com`
+- [ ] 7. Verify: `GET /trunks/{trunkId}/credentialLists` (**must be non-empty**), `GET /trunks/{trunkId}/endpoints`, and `GET /projects/{projectId}/phoneNumbers`
+
+> **Do not skip step 3.** Creating the registered endpoint succeeds with `201` even when the credential list is *not* linked to the trunk — the API only checks that the username exists somewhere in the project. Provisioning looks completely healthy, then every REGISTER fails with `401` at SIP time.
+
+**Credential list passwords** must be at least **12 characters** and contain an uppercase, a lowercase and a numeric character, or creation fails with `400`.
 
 **API docs**: [Create trunk](https://developers.sinch.com/docs/est/api-reference/est/sip-trunks/createsiptrunk.md) → [Credential Lists](https://developers.sinch.com/docs/est/api-reference/est/credential-lists/getcredentiallistbyid.md) → [Create SIP endpoint](https://developers.sinch.com/docs/est/api-reference/est/sip-endpoints/createsipendpoint.md) → [Get phone numbers](https://developers.sinch.com/docs/est/api-reference/est/phone-numbers/getphonenumbers.md)
 
@@ -188,7 +204,7 @@ For SDK examples, see the [Getting Started Guide](https://developers.sinch.com/d
 
 ## Gotchas and Best Practices
 
-1. **CIDR notation** — ACL entries require CIDR (`/32` for single IP, `/24` for range).
+1. **ACL IP ranges are objects, not CIDR strings.** Do NOT send `"203.0.113.10/32"`. Send `{"ipAddress": "203.0.113.10", "range": 32}` — the prefix length is a separate integer field (1-32). `enabled` is also required on the ACL. Sending a CIDR string fails with an unhelpful `400 VALIDATION_FAILED` / `"Failed to read HTTP message"`.
 2. **Country permissions** — US/Canada enabled by default. Other countries blocked; use `updateCountryPermissions`.
 3. **Project ID ≠ App Key** — EST uses `projectId`, not the Voice Application Key.
 4. **Default CPS limit** — 1 call per second. Exceeding it → 603. Contact Sinch to increase.
@@ -199,7 +215,7 @@ For SDK examples, see the [Getting Started Guide](https://developers.sinch.com/d
 For SIP error codes and debugging runbooks, see [references/diagnostics.md](references/diagnostics.md).
 
 Quick reference:
-- **401** → Credential mismatch in Credential List
+- **401** → Credential list not linked to the trunk (check `GET /trunks/{trunkId}/credentialLists` first), or credential mismatch in the Credential List
 - **403** → IP not in ACL, or wrong `From` domain
 - **404** → Using wrong SIP domain (must be `{hostname}.pstn.sinch.com`)
 - **503** → No active endpoint on trunk
