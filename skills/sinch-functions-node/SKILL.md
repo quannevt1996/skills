@@ -1,6 +1,6 @@
 ---
 name: sinch-functions-node
-description: Write Node.js/TypeScript Sinch Functions code (runtime package `@sinch/functions-runtime`). Use when writing or editing `function.ts`, building a voice function with `onCall` and the `commands()` builder behind a `voiceWebhook` export, handling `call.incoming`/`call.answered`/`call.menu`/`call.hangup` events, placing or bridging calls with `context.voice`, building IVR menus with `menu()`, extending `ConversationController` for SMS/WhatsApp/RCS webhooks, exporting custom HTTP handlers, using `FunctionContext` (cache/storage/database/SDK clients like `context.sms`/`context.voice`/`context.conversation`), protecting handlers with `export const auth`, writing `setup()` hooks for WebSocket or startup init, or using helpers like `getText`/`getChannel`/`ConversationMessage`. Also covers the legacy Voice v1 `ice`/`ace`/`pie`/`dice` handlers and `IceSvamlBuilder`/`AceSvamlBuilder`/`PieSvamlBuilder`. For terminal commands (`sinch functions dev`, `sinch functions deploy`) use sinch-cli; for C# runtime code use sinch-functions-dotnet.
+description: Write Node.js/TypeScript Sinch Functions with `@sinch/functions-runtime`. Use when writing or editing `function.ts`: answering and controlling calls, IVR menus, placing or bridging calls, SMS/WhatsApp/RCS webhooks, custom HTTP endpoints, cache/storage/database, auth and `setup()` hooks. Also covers legacy Voice v1 `ice`/`ace`/`pie`/`dice` handlers. Run and deploy with the sinch-cli skill.
 metadata:
   author: Sinch
   version: 1.0.0
