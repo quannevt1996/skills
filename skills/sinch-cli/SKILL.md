@@ -1,6 +1,6 @@
 ---
 name: sinch-cli
-description: Terminal commands for the Sinch CLI (`sinch`, npm `@sinch/cli`). Use whenever the user runs or asks about a `sinch` command: login, Functions init/dev/deploy/logs/status, phone numbers and porting, sending SMS/WhatsApp/RCS, placing calls and configuring voice services, fax, SIP trunks, secrets and templates. Runtime code is covered by sinch-functions-node and sinch-functions-dotnet.
+description: "Terminal commands for the Sinch CLI (`sinch`, npm `@sinch/cli`). Use whenever the user runs or asks about a `sinch` command: login, Functions init/dev/deploy/logs/status, phone numbers and porting, sending SMS/WhatsApp/RCS, placing calls and configuring voice services, fax, SIP trunks, secrets and templates. Runtime code is covered by sinch-functions-node and sinch-functions-dotnet."
 metadata:
   author: Sinch
   version: 1.0.0

@@ -1,6 +1,6 @@
 ---
 name: sinch-functions-dotnet
-description: Write C#/.NET Sinch Functions with the `Sinch.Functions.Runtime` NuGet package. Use when writing or editing a function controller: answering and controlling calls, IVR menus, placing or bridging calls, SMS/WhatsApp/RCS webhooks, custom HTTP endpoints, dependency injection, cache/storage/database and authorization. Also covers legacy Voice v1 `Ice`/`Ace`/`Pie`/`Dice` overrides. Run and deploy with the sinch-cli skill.
+description: "Write C#/.NET Sinch Functions with the `Sinch.Functions.Runtime` NuGet package. Use when writing or editing a function controller: answering and controlling calls, IVR menus, placing or bridging calls, SMS/WhatsApp/RCS webhooks, custom HTTP endpoints, dependency injection, cache/storage/database and authorization. Also covers legacy Voice v1 `Ice`/`Ace`/`Pie`/`Dice` overrides. Run and deploy with the sinch-cli skill."
 metadata:
   author: Sinch
   version: 1.0.0
