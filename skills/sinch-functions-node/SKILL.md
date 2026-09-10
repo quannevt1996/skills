@@ -1,6 +1,6 @@
 ---
 name: sinch-functions-node
-description: Write Node.js/TypeScript Sinch Functions with `@sinch/functions-runtime`. Use when writing or editing `function.ts`: answering and controlling calls, IVR menus, placing or bridging calls, SMS/WhatsApp/RCS webhooks, custom HTTP endpoints, cache/storage/database, auth and `setup()` hooks. Also covers legacy Voice v1 `ice`/`ace`/`pie`/`dice` handlers. Run and deploy with the sinch-cli skill.
+description: "Write Node.js/TypeScript Sinch Functions with `@sinch/functions-runtime`. Use when writing or editing `function.ts`: answering and controlling calls, IVR menus, placing or bridging calls, SMS/WhatsApp/RCS webhooks, custom HTTP endpoints, cache/storage/database, auth and `setup()` hooks. Also covers legacy Voice v1 `ice`/`ace`/`pie`/`dice` handlers. Run and deploy with the sinch-cli skill."
 metadata:
   author: Sinch
   version: 1.0.0

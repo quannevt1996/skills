@@ -1,6 +1,6 @@
 ---
 name: sinch-functions
-description: Sinch Functions, the beta serverless platform for voice, SMS and conversation apps. Use for platform questions: what it is, how deployment works, choosing Node.js or C#, install and auth, FunctionContext, handlers, the Voice v2 call lifecycle and `call.*` events, voice services and `VOICE_SERVICE_ID`, and SVAML. Runtime code lives in sinch-functions-node and sinch-functions-dotnet.
+description: "Sinch Functions, the beta serverless platform for voice, SMS and conversation apps. Use for platform questions: what it is, how deployment works, choosing Node.js or C#, install and auth, FunctionContext, handlers, the Voice v2 call lifecycle and `call.*` events, voice services and `VOICE_SERVICE_ID`, and SVAML. Runtime code lives in sinch-functions-node and sinch-functions-dotnet."
 metadata:
   author: Sinch
   version: 1.0.0
