@@ -57,6 +57,8 @@ Each skill lives in its own folder under `skills/`. The `SKILL.md` file contains
 
 ## Contributing
 
+Full authoring guide: [CONTRIBUTING.md](CONTRIBUTING.md). In short:
+
 1. Create `skills/<product-name>/SKILL.md` with YAML frontmatter (`---` delimiters, `name` and `description` fields)
 2. Fill in the YAML frontmatter and all body sections
 3. Keep each SKILL.md under 500 lines
