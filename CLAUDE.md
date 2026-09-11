@@ -31,7 +31,7 @@ One folder per Sinch product. The skill file is always `SKILL.md`.
 ### Frontmatter
 
 - `name`: Max 64 characters. Format: `sinch-<product-slug>` (e.g., `sinch-sms`, `sinch-voice-api`)
-- `description`: Max 1024 characters. Describes when to trigger the skill (e.g., "When the user wants to send SMS messages using the Sinch SMS API")
+- `description`: Max 1024 characters. Describes when to trigger the skill (e.g., "When the user wants to send SMS messages using the Sinch SMS API"). Wrap it in double quotes if it contains `: ` or starts with a special character; Tessl parses the frontmatter as strict YAML and rejects the publish otherwise (`node scripts/lint-skills.mjs` runs this check in CI).
 
 ### Body Sections
 
