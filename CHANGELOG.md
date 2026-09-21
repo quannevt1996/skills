@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. Individual skills have their own versions in metadata.
 
+## 2026-09-14
+
+### Changed
+
+- `sinch-cli` v1.1.0, `sinch-functions` v1.1.0, `sinch-functions-node` v1.1.0, `sinch-functions-dotnet` v1.1.0 — Adopted the shared-policy pattern used by every other skill: generated policy gate and digest under Agent Instructions plus a bundled `references/shared-policy.md`. Removed the dependency on the non-existent `sinch-voice-api-v2` skill; Voice API 2.0 is now referenced by its documentation URL. Replaced cross-skill relative links with plain skill names so each skill is standalone. `sinch-cli` also gained a Security section.
+- `sinch-authentication` v1.3.0, `sinch-10dlc` v1.3.0, `sinch-numbers-api` v1.3.0, `sinch-voice-api` v1.3.0, `sinch-conversation-api` v2.1.0, `sinch-elastic-sip-trunking` v1.2.0, `sinch-fax-api` v1.2.0, `sinch-imported-numbers-hosting-orders` v1.2.0, `sinch-in-app-calling` v1.2.0, `sinch-mailgun` v1.2.0, `sinch-mailgun-inspect` v1.2.0, `sinch-mailgun-optimize` v1.2.0, `sinch-mailgun-validate` v1.2.0, `sinch-mms` v1.2.0, `sinch-number-lookup-api` v1.2.0, `sinch-number-order-api` v1.2.0, `sinch-porting-api` v1.2.0, `sinch-provisioning-api` v1.2.0, `sinch-rcs` v1.2.0, `sinch-sdks` v1.2.0, `sinch-sms` v1.2.0, `sinch-verification-api` v1.2.0, `sinch-whatsapp` v1.2.0 — Version bump for the shared-policy rollout merged after the 2026-09-11 GitHub release: Agent Instructions now carry the `sinch-shared-policy@5` gate and digest, bundled references and scripts use the unified "not a schema" and execution-tool framing, cross-skill links were replaced with plain skill names, and follow-up fixes landed for OAuth2 token acquisition, HMAC webhook validation, project-scoped webhook registration, Mailgun infrastructure endpoints, and the Voice API v1 version scope.
+
+### Fixed
+
+- `scripts/validate_sinch_skills.py` — Skill-count tripwire raised from 23 to 27 to include the Functions and CLI skills.
+
 ## 2026-09-05
 
 ### Fixed
